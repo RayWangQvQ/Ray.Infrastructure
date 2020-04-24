@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace System.Collections.Generic
 {
@@ -17,6 +16,17 @@ namespace System.Collections.Generic
         {
             if (dic.ContainsKey(key)) return;
             dic.Add(key, value);
+        }
+
+        public static string GetSelectionToStr(this Dictionary<string, string> dic)
+        {
+            var sb = new StringBuilder();
+            foreach (var item in dic)
+            {
+                sb.AppendLine($"{item.Key}：{item.Value}");
+            }
+
+            return sb.ToString();
         }
     }
 }
