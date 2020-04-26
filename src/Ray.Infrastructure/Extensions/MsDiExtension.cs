@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace System
@@ -44,11 +45,25 @@ namespace System
         }
 
         /// <summary>
+        /// 获取容器中的服务描述池
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <returns></returns>
+        public static IEnumerable<ServiceDescriptor> GetServiceDescriptorsFromScope(this IServiceProvider serviceProvider)
+        {
+            return serviceProvider
+                    .GetEngine()//拿到引擎对象
+                    .GetPropertyValue("CallSiteFactory")//拿到引擎的CallSiteFactory属性（CallSiteFactory对象）
+                    .GetFieldValue("_descriptors")//CallSiteFactory对象内的_descriptors字段即是服务描述集合
+                as IEnumerable<ServiceDescriptor>;
+        }
+
+        /// <summary>
         /// 获取容器内的实例池中已持久化的实例集合
         /// </summary>
         /// <param name="serviceProvider">容器</param>
         /// <returns></returns>
-        public static IEnumerable<object> GetResolvedServicesFromScope(this IServiceProvider serviceProvider)
+        public static Dictionary<string, object> GetResolvedServicesFromScope(this IServiceProvider serviceProvider)
         {
             var objList = serviceProvider
                     .GetRequiredService<IServiceProvider>()//引擎域
@@ -56,7 +71,7 @@ namespace System
                     .GetPropertyValue("Values")
                 as IEnumerable<object>;
 
-            return objList ?? new List<object>();
+            return objList?.ToDictionary(x => x.ToString(), x => x);
         }
 
         /// <summary>
