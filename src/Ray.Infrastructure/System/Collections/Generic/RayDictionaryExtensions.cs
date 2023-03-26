@@ -2,7 +2,7 @@
 
 namespace System.Collections.Generic
 {
-    public static class DictionaryExtension
+    public static class RayDictionaryExtensions
     {
         public static void AddIfNotExist<TKey, TValue>(this Dictionary<TKey, TValue> dic, Dictionary<TKey, TValue> addDic)
         {

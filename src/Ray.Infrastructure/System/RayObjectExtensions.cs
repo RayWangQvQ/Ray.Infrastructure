@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Ray.Infrastructure.Extensions.Json;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
 namespace System
 {
-    public static class ObjectExtension
+    public static class RayObjectExtensions
     {
         #region BindingFlags常用组合
         /**
@@ -47,6 +50,9 @@ namespace System
         //所有当前类公有成员
         public static BindingFlags FlagsOfAllPulicCurrent => FlagsOfAllPulic | BindingFlags.DeclaredOnly;
         #endregion
+
+        #region 反射
+
 
         /// <summary>
         /// 获取对象的字段和值
@@ -165,5 +171,86 @@ namespace System
                 return default;
             }
         }
+
+        #endregion
+
+        #region Json
+
+        public static string ToJsonStr(this object obj)
+        {
+            if (obj == null) return null;
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        public static string ToJsonStr(this object obj, Action<SettingOption> option = null)
+        {
+            SettingOption settingOption = new SettingOption();
+            option?.Invoke(settingOption);
+
+            var setting = settingOption.BuildSettings();
+            return JsonConvert.SerializeObject(obj, setting);
+        }
+
+        #endregion
+        
+        #region Description
+
+        /// <summary>获取枚举变量值的 Description 属性</summary>
+        /// <param name="obj">枚举变量</param>
+        /// <param name="isTop">是否改变为返回该类、枚举类型的头 Description 属性，而不是当前的属性或枚举变量值的 Description 属性</param>
+        /// <returns>如果包含 Description 属性，则返回 Description 属性的值，否则返回枚举变量值的名称</returns>
+        public static string Description(this object obj, bool isTop = false)
+        {
+            if (obj == null)
+                return string.Empty;
+            try
+            {
+                Type type = obj.GetType();
+                DescriptionAttribute descriptionAttribute = !isTop
+                    ? (DescriptionAttribute)Attribute.GetCustomAttribute(
+                        type.GetField(Enum.GetName(type, obj)), typeof(DescriptionAttribute))
+                    : (DescriptionAttribute)Attribute.GetCustomAttribute(type, typeof(DescriptionAttribute));
+                if (descriptionAttribute != null)
+                {
+                    if (!string.IsNullOrEmpty(descriptionAttribute.Description))
+                        return descriptionAttribute.Description;
+                }
+            }
+            catch
+            {
+                //ignore
+            }
+            return obj.ToString();
+        }
+
+        /// <summary>获取枚举变量值的 DefaultValue 属性</summary>
+        /// <param name="obj">枚举变量</param>
+        /// <param name="isTop">是否改变为返回该类、枚举类型的头 Description 属性，而不是当前的属性或枚举变量值的 Description 属性</param>
+        /// <returns>如果包含 Description 属性，则返回 Description 属性的值，否则返回枚举变量值的名称</returns>
+        public static string DefaultValue(this object obj, bool isTop = false)
+        {
+            if (obj == null)
+                return string.Empty;
+            try
+            {
+                Type type = obj.GetType();
+                DefaultValueAttribute defaultValueAttribute = !isTop
+                    ? (DefaultValueAttribute)Attribute.GetCustomAttribute(type.GetField(Enum.GetName(type, obj)), typeof(DefaultValueAttribute))
+                    : (DefaultValueAttribute)Attribute.GetCustomAttribute(type, typeof(DefaultValueAttribute));
+                if (defaultValueAttribute != null)
+                {
+                    if (!string.IsNullOrEmpty(defaultValueAttribute.Value.ToString()))
+                        return defaultValueAttribute.Value.ToString();
+                }
+            }
+            catch
+            {
+                //ignore
+            }
+            return obj.ToString();
+        }
+
+        #endregion
+
     }
 }

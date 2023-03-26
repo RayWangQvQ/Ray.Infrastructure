@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -7,7 +8,7 @@ using Ray.Infrastructure.Helpers;
 
 namespace System
 {
-    public static class MsDiExtension
+    public static class RayServiceProviderExtensions
     {
         /// <summary>
         /// 获取容器引擎对象
@@ -76,8 +77,8 @@ namespace System
                 .GetPropertyValue("ResolvedServices"); //返回Dictionary<Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceCacheKey,object>的装箱后的object，注意ServiceCacheKey为internal struct
 
             List<ServiceCacheKeyDto> keys = obj.GetPropertyValue("Keys")
-                .AsJsonStr(false)
-                .JsonDeserialize<IEnumerable<ServiceCacheKeyDto>>(false)
+                .ToJsonStr()
+                .JsonDeserialize<IEnumerable<ServiceCacheKeyDto>>()
                 .ToList();
 
             List<object> values = ((IEnumerable<object>)obj.GetPropertyValue("Values"))
