@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net7.0;net6.0</TargetFrameworks>
 		<Description>RayInfrastructure</Description>
 		<RootNamespace />
 		<AssemblyName>Ray.Infrastructure</AssemblyName>
 		<PackageId>Ray.Infrastructure</PackageId>
-		<Version>0.0.4</Version>
+		<Version>0.0.5</Version>
 		<Authors>Ray</Authors>
 		<Company>Ray</Company>
 	</PropertyGroup>
@@ -17,10 +17,6 @@
 		<PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Update="AutoMapper" Version="10.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>
