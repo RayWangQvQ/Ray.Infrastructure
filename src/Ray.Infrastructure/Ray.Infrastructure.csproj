@@ -9,6 +9,11 @@
 		<Version>0.0.5</Version>
 		<Authors>Ray</Authors>
 		<Company>Ray</Company>
+		<PackageProjectUrl>https://github.com/RayWangQvQ/Ray.Infrastructure</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/RayWangQvQ/Ray.Infrastructure</RepositoryUrl>
+		<Description>
+			This client library is a infrastructure that including extensions and helpers etc.
+		</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
