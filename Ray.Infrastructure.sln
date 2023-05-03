@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{136C8377-802
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ray.Infrastructure", "src\Ray.Infrastructure\Ray.Infrastructure.csproj", "{9872913E-BB7C-4ABF-ACE3-9ED0FCA07FAC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6842347B-7A0F-40B3-9F50-46FFD57F69D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QrCodeTests", "test\QrCodeTests\QrCodeTests.csproj", "{F5610550-4CE3-40B8-B00E-42F9EAA96B31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +21,17 @@ Global
 		{9872913E-BB7C-4ABF-ACE3-9ED0FCA07FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9872913E-BB7C-4ABF-ACE3-9ED0FCA07FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9872913E-BB7C-4ABF-ACE3-9ED0FCA07FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5610550-4CE3-40B8-B00E-42F9EAA96B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5610550-4CE3-40B8-B00E-42F9EAA96B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5610550-4CE3-40B8-B00E-42F9EAA96B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5610550-4CE3-40B8-B00E-42F9EAA96B31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9872913E-BB7C-4ABF-ACE3-9ED0FCA07FAC} = {136C8377-8027-41A1-BCFA-1D4537281448}
+		{F5610550-4CE3-40B8-B00E-42F9EAA96B31} = {6842347B-7A0F-40B3-9F50-46FFD57F69D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C14DA041-CB3B-48B5-8B69-D472D67D518E}
