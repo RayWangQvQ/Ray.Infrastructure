@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using SkiaSharp;
 using ZXing;
-using ZXing.Common;
 using ZXing.SkiaSharp;
 using ZXing.SkiaSharp.Rendering;
 
@@ -18,13 +17,25 @@ namespace Ray.Infrastructure.BarCode
         /// <returns></returns>
         public static Result DecodeByBase64Str(string base64Str)
         {
+            var re = DecodeByBase64Str("", out var skBitmap);
+            skBitmap.Dispose();
+            return re;
+        }
+        /// <summary>
+        /// 解析二维码
+        /// </summary>
+        /// <param name="base64Str"></param>
+        /// <param name="skBitmap">注意要自己Dispose掉</param>
+        /// <returns></returns>
+        public static Result DecodeByBase64Str(string base64Str, out SKBitmap skBitmap)
+        {
             byte[] arr = Convert.FromBase64String(base64Str);
             using var ms = new MemoryStream(arr);
 
-            using var skiaImage = SkiaSharp.SKBitmap.Decode(ms);
+            skBitmap = SKBitmap.Decode(ms);
 
-            var skiaReader = new ZXing.SkiaSharp.BarcodeReader();
-            Result skiaResult = skiaReader.Decode(skiaImage);
+            var skiaReader = new BarcodeReader();
+            Result skiaResult = skiaReader.Decode(skBitmap);
 
             return skiaResult;
         }
