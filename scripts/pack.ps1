@@ -11,4 +11,4 @@ New-Item -ItemType Directory -Path ./bin/nupkgs -Force
 Remove-Item -Path ./bin/nupkgs/* -Recurse -Force
 
 # Pack the project and output to bin/nupkgs folder
-dotnet pack --output bin/nupkgs
+dotnet pack ./src/Ray.Infrastructure/Ray.Infrastructure.csproj --output bin/nupkgs
