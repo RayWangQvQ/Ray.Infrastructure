@@ -33,6 +33,11 @@ namespace Ray.Infrastructure.AutoTask
             Index++;
         }
 
+        public bool HasNext()
+        {
+            return Index + 1 < Count;
+        }
+
         public void ReplaceCookieContainerWithCurrentAccount(CookieContainer source)
         {
             //clear existed by Expiring it
