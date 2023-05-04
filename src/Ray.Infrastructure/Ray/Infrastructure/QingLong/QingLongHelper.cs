@@ -38,10 +38,12 @@ namespace Ray.Infrastructure.QingLong
             return token;
         }
 
-        public static async Task SaveCookieListItemToQinLongAsync(IQingLongApi qingLongApi, string keyWithOutNum, string value, string containValue, ILogger logger = null, CancellationToken cancellationToken = default)
+        public static async Task SaveCookieListItemToQinLongAsync(IQingLongApi qingLongApi, 
+            string keyBeforeNum, string value, string containValue, string keyAfterNum="States",
+            ILogger logger = null, CancellationToken cancellationToken = default)
         {
             //查env
-            var re = await qingLongApi.GetEnvs(keyWithOutNum);
+            var re = await qingLongApi.GetEnvs(keyBeforeNum);
 
             if (re.Code != 200)
             {
@@ -51,7 +53,7 @@ namespace Ray.Infrastructure.QingLong
 
             logger?.LogDebug(re.Data.ToJsonStr());
 
-            var list = re.Data.Where(x => x.name.StartsWith(keyWithOutNum)).ToList();
+            var list = re.Data.Where(x => x.name.StartsWith(keyBeforeNum)).ToList();
             QingLongEnv oldEnv = list.FirstOrDefault(x => x.value.Contains(containValue));
 
             if (oldEnv != null)
@@ -80,12 +82,13 @@ namespace Ray.Infrastructure.QingLong
             {
                 maxNum = list.Select(x =>
                 {
-                    var num = x.name.Replace($"{keyWithOutNum}__", "");
+                    var num = x.name.Replace($"{keyBeforeNum}__", "").Replace($"__{keyAfterNum}","");
                     var parseSuc = int.TryParse(num, out int envNum);
                     return parseSuc ? envNum : 0;
                 }).Max();
             }
-            var name = $"{keyWithOutNum}__{maxNum + 1}";
+            var name = $"{keyBeforeNum}__{maxNum + 1}";
+            if (!string.IsNullOrWhiteSpace(keyAfterNum)) name += $"__{keyAfterNum}";
             logger?.LogInformation("Key：{key}", name);
 
             var add = new AddQingLongEnv()

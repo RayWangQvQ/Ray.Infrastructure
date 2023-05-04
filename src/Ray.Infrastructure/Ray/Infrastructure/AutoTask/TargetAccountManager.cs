@@ -2,18 +2,17 @@
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace Ray.Infrastructure.AutoTask
 {
     public class TargetAccountManager<TTargetAccountInfo> where TTargetAccountInfo : TargetAccountInfo
     {
-        public int Index { get; set; }
+        public TargetAccountManager(IOptions<List<TTargetAccountInfo>> accountsOptions):this(accountsOptions.Value)
+        {
+        }
 
-        public int Count => TargetAccountDic.Count;
-
-        private Dictionary<int, TTargetAccountInfo> TargetAccountDic { get; } = new();
-
-        public void Init(List<TTargetAccountInfo> accounts)
+        public TargetAccountManager(List<TTargetAccountInfo> accounts)
         {
             for (int i = 0; i < accounts.Count; i++)
             {
@@ -21,7 +20,18 @@ namespace Ray.Infrastructure.AutoTask
             }
         }
 
-        public TargetAccountInfo CurrentTargetAccount => TargetAccountDic[Index];
+        public int Index { get; set; }
+
+        public int Count => TargetAccountDic.Count;
+
+        private Dictionary<int, TTargetAccountInfo> TargetAccountDic { get; } = new();
+
+        public TTargetAccountInfo CurrentTargetAccount => TargetAccountDic[Index];
+
+        public void MoveToNext()
+        {
+            Index++;
+        }
 
         public void ReplaceCookieContainerWithCurrentAccount(CookieContainer source)
         {
@@ -47,6 +57,11 @@ namespace Ray.Infrastructure.AutoTask
 
     public class TargetAccountInfo
     {
+        public TargetAccountInfo()
+        {
+            
+        }
+
         public TargetAccountInfo(string userName, string pwd, CookieContainer cookieContainer = null)
         {
             UserName = userName;
