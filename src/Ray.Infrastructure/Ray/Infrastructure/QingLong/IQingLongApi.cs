@@ -8,13 +8,13 @@ namespace Ray.Infrastructure.QingLong
     public interface IQingLongApi
     {
         [Get("/api/envs")]
-        Task<QingLongGenericResponse<List<QingLongEnv>>> GetEnvs(string searchValue);
+        Task<QingLongGenericResponse<List<QingLongEnv>>> GetEnvsAsync(string searchValue);
 
         [Post("/api/envs")]
-        Task<QingLongGenericResponse<List<QingLongEnv>>> AddEnvs([Body] List<AddQingLongEnv> envs);
+        Task<QingLongGenericResponse<List<QingLongEnv>>> AddEnvsAsync([Body] List<AddQingLongEnv> envs);
 
         [Put("/api/envs")]
-        Task<QingLongGenericResponse<QingLongEnv>> UpdateEnvs([Body] UpdateQingLongEnv env);
+        Task<QingLongGenericResponse<QingLongEnv>> UpdateEnvsAsync([Body] UpdateQingLongEnv env);
     }
 
 
