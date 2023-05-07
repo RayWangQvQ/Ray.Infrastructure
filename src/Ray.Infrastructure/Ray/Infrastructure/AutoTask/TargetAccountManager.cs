@@ -79,5 +79,21 @@ namespace Ray.Infrastructure.AutoTask
         public string UserName { get; set; }
 
         public string Pwd { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            TargetAccountInfo other = (TargetAccountInfo)obj;
+            return this.UserName == other.UserName;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

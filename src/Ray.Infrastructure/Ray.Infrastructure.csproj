@@ -6,7 +6,7 @@
 		<RootNamespace />
 		<AssemblyName>Ray.Infrastructure</AssemblyName>
 		<PackageId>Ray.Infrastructure</PackageId>
-		<Version>0.0.20</Version>
+		<Version>0.0.21</Version>
 		<Authors>Ray</Authors>
 		<Company>Ray</Company>
 		<PackageProjectUrl>https://github.com/RayWangQvQ/Ray.Infrastructure</PackageProjectUrl>
