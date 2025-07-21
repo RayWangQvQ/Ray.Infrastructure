@@ -11,9 +11,7 @@ public interface IQingLongApi
     Task<QingLongGenericResponse<List<QingLongEnv>>> GetEnvsAsync(string searchValue);
 
     [Post("/api/envs")]
-    Task<QingLongGenericResponse<List<QingLongEnv>>> AddEnvsAsync(
-        [Body] List<AddQingLongEnv> envs
-    );
+    Task<QingLongGenericResponse<List<QingLongEnv>>> AddEnvsAsync([Body] List<AddQingLongEnv> envs);
 
     [Put("/api/envs")]
     Task<QingLongGenericResponse<QingLongEnv>> UpdateEnvsAsync([Body] UpdateQingLongEnv env);

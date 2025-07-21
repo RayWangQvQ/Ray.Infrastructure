@@ -20,9 +20,7 @@ public class ZipHelper
         string result = string.Empty;
         using (MemoryStream ms = new MemoryStream(bytes))
         {
-            using (
-                GZipStream decompressedStream = new GZipStream(ms, CompressionMode.Decompress)
-            )
+            using (GZipStream decompressedStream = new GZipStream(ms, CompressionMode.Decompress))
             {
                 using (
                     StreamReader sr = new StreamReader(

@@ -66,11 +66,7 @@ public class TargetAccountInfo
 {
     public TargetAccountInfo() { }
 
-    public TargetAccountInfo(
-        string userName,
-        string pwd,
-        CookieContainer cookieContainer = null
-    )
+    public TargetAccountInfo(string userName, string pwd, CookieContainer cookieContainer = null)
     {
         UserName = userName;
         Pwd = pwd;

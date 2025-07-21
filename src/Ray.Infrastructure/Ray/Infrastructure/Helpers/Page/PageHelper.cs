@@ -101,8 +101,7 @@ public class PageHelper
         if (filter != null)
             source = source.Where(filter);
         totalCount = source.Count();
-        totalPages =
-            totalCount > 0 ? (int)Math.Ceiling((double)totalCount / (double)pageSize) : 0;
+        totalPages = totalCount > 0 ? (int)Math.Ceiling((double)totalCount / (double)pageSize) : 0;
 
         //pageIndex为0，只返回计算的分页信息
         if (pageIndex == 0)

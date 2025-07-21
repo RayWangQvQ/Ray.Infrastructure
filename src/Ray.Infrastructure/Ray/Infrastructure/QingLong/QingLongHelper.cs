@@ -185,9 +185,7 @@ public class QingLongHelper
                 id = oldEnv.id,
                 name = oldEnv.name,
                 value = value,
-                remarks = string.IsNullOrWhiteSpace(oldEnv.remarks)
-                    ? containValue
-                    : oldEnv.remarks,
+                remarks = string.IsNullOrWhiteSpace(oldEnv.remarks) ? containValue : oldEnv.remarks,
             };
 
             var updateRe = await qingLongApi.UpdateEnvsAsync(update);

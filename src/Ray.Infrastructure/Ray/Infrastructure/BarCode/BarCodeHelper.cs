@@ -266,10 +266,7 @@ public class BarCodeHelper
         }
     }
 
-    public static void PrintSmallQrCode(
-        SKBitmap skBitmap,
-        Action<string> onRowPrintProcess = null
-    )
+    public static void PrintSmallQrCode(SKBitmap skBitmap, Action<string> onRowPrintProcess = null)
     {
         var points = AdaptToPoints(skBitmap);
         PrintSmallQrCode(points, onRowPrintProcess);

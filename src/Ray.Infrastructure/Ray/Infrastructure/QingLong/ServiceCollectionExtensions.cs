@@ -12,8 +12,7 @@ public static class ServiceCollectionExtensions
         Action<IHttpClientBuilder> builderAction = null
     )
     {
-        var qinglongHost =
-            Environment.GetEnvironmentVariable("QL_URL") ?? "http://localhost:5600";
+        var qinglongHost = Environment.GetEnvironmentVariable("QL_URL") ?? "http://localhost:5600";
 
         var token = "";
         try
