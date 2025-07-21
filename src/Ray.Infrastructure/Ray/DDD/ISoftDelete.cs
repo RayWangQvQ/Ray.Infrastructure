@@ -1,7 +1,6 @@
-﻿namespace Ray.DDD
+﻿namespace Ray.DDD;
+
+public interface ISoftDelete
 {
-    public interface ISoftDelete
-    {
-        bool IsSoftDeleted { get; set; }
-    }
+    bool IsSoftDeleted { get; set; }
 }

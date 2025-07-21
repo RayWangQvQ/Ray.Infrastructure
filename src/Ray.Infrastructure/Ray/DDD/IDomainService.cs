@@ -1,4 +1,3 @@
-﻿namespace Ray.DDD
-{
-    public interface IDomainService { }
-}
+﻿namespace Ray.DDD;
+
+public interface IDomainService { }

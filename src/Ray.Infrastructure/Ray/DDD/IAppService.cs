@@ -1,4 +1,3 @@
-﻿namespace Ray.DDD
-{
-    public interface IAppService { }
-}
+﻿namespace Ray.DDD;
+
+public interface IAppService { }

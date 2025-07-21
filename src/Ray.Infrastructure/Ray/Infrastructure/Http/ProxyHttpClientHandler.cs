@@ -3,44 +3,43 @@ using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Ray.Infrastructure.Http
+namespace Ray.Infrastructure.Http;
+
+public class ProxyHttpClientHandler : HttpClientHandler
 {
-    public class ProxyHttpClientHandler : HttpClientHandler
+    public ProxyHttpClientHandler(
+        IOptions<HttpClientCustomOptions> options,
+        ILogger<ProxyHttpClientHandler> logger
+    )
     {
-        public ProxyHttpClientHandler(
-            IOptions<HttpClientCustomOptions> options,
-            ILogger<ProxyHttpClientHandler> logger
-        )
+        var configs = options.Value;
+        var proxyAddress = configs.WebProxy;
+
+        if (!string.IsNullOrWhiteSpace(proxyAddress))
         {
-            var configs = options.Value;
-            var proxyAddress = configs.WebProxy;
+            logger.LogInformation("使用代理");
 
-            if (!string.IsNullOrWhiteSpace(proxyAddress))
+            WebProxy webProxy;
+
+            //user:password@host:port http proxy only
+            if (proxyAddress.Contains("@"))
             {
-                logger.LogInformation("使用代理");
+                var credentialAndAddressList = proxyAddress.Split("@");
 
-                WebProxy webProxy;
+                string userPass = credentialAndAddressList[0];
+                string proxyUser = userPass.Split(":")[0];
+                string proxyPass = userPass.Split(":")[1];
+                var credentials = new NetworkCredential(proxyUser, proxyPass);
 
-                //user:password@host:port http proxy only
-                if (proxyAddress.Contains("@"))
-                {
-                    var credentialAndAddressList = proxyAddress.Split("@");
+                string address = credentialAndAddressList[1];
 
-                    string userPass = credentialAndAddressList[0];
-                    string proxyUser = userPass.Split(":")[0];
-                    string proxyPass = userPass.Split(":")[1];
-                    var credentials = new NetworkCredential(proxyUser, proxyPass);
-
-                    string address = credentialAndAddressList[1];
-
-                    webProxy = new WebProxy(address, true, null, credentials);
-                }
-                else
-                {
-                    webProxy = new WebProxy(proxyAddress, true);
-                }
-                Proxy = webProxy;
+                webProxy = new WebProxy(address, true, null, credentials);
             }
+            else
+            {
+                webProxy = new WebProxy(proxyAddress, true);
+            }
+            Proxy = webProxy;
         }
     }
 }
