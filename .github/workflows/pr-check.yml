@@ -76,28 +76,17 @@ jobs:
           --results-directory ./TestResults/ \
           --logger trx \
           --logger "console;verbosity=detailed" \
-          /p:CollectCoverage=true \
-          /p:CoverletOutputFormat=cobertura \
-          /p:CoverletOutput=./TestResults/coverage.cobertura.xml \
-          /p:Include="[Ray.Infrastructure]*" \
-          /p:Exclude="[Ray.Infrastructure.Tests]*"
+          --settings coverlet.runsettings
         
-          --settings coverlet.runsettings \
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Include="[Ray.Infrastructure]*"
         if [ $? -ne 0 ]; then
           echo "❌ Unit tests failed!"
-        
-        # List coverage files for debugging
-        echo "📋 Coverage files generated:"
-        find ./TestResults -name "*.xml" -o -name "*.cobertura.xml" | head -10
           exit 1
         fi
         echo "✅ Unit tests passed!"
         
         # List coverage files for debugging
         echo "📋 Coverage files generated:"
-        find ./TestResults -name "*.cobertura.xml" -o -name "coverage.cobertura.xml" | head -10
+        find ./TestResults -name "*.xml" -o -name "*.cobertura.xml" | head -10
 
     - name: Install ReportGenerator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
