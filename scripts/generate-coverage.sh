@@ -157,17 +157,17 @@ find_coverage_files() {
     # 优先查找 cobertura 格式文件
     if find "./$TEST_RESULTS_DIR" -name "*.cobertura.xml" | grep -q .; then
         coverage_files=$(find "./$TEST_RESULTS_DIR" -name "*.cobertura.xml" | tr '\n' ';' | sed 's/;$//')
-        log_info "找到 cobertura 格式覆盖率文件"
+        log_info "找到 cobertura 格式覆盖率文件" >&2
     # 备选 opencover 格式文件
     elif find "./$TEST_RESULTS_DIR" -name "*.opencover.xml" | grep -q .; then
         coverage_files=$(find "./$TEST_RESULTS_DIR" -name "*.opencover.xml" | tr '\n' ';' | sed 's/;$//')
-        log_info "找到 opencover 格式覆盖率文件"
+        log_info "找到 opencover 格式覆盖率文件" >&2
     # 查找通用 coverage.xml 文件
     elif find "./$TEST_RESULTS_DIR" -name "coverage.xml" | grep -q .; then
         coverage_files=$(find "./$TEST_RESULTS_DIR" -name "coverage.xml" | tr '\n' ';' | sed 's/;$//')
-        log_info "找到通用 coverage.xml 文件"
+        log_info "找到通用 coverage.xml 文件" >&2
     else
-        log_error "未找到覆盖率文件!"
+        log_error "未找到覆盖率文件!" >&2
         exit 1
     fi
     
