@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.IO.Compression;
-using System.IO;
 using System.Text;
 
 namespace Ray.Infrastructure.Helpers
@@ -22,9 +20,16 @@ namespace Ray.Infrastructure.Helpers
             string result = string.Empty;
             using (MemoryStream ms = new MemoryStream(bytes))
             {
-                using (GZipStream decompressedStream = new GZipStream(ms, CompressionMode.Decompress))
+                using (
+                    GZipStream decompressedStream = new GZipStream(ms, CompressionMode.Decompress)
+                )
                 {
-                    using (StreamReader sr = new StreamReader(decompressedStream, Encoding.GetEncoding(encoding)))
+                    using (
+                        StreamReader sr = new StreamReader(
+                            decompressedStream,
+                            Encoding.GetEncoding(encoding)
+                        )
+                    )
                     {
                         result = sr.ReadToEnd();
                     }

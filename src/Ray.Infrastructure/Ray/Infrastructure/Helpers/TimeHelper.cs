@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Ray.Infrastructure.Helpers
 {
@@ -9,7 +7,15 @@ namespace Ray.Infrastructure.Helpers
         /// <summary>
         /// 时间戳计时开始时间
         /// </summary>
-        private static readonly DateTime TimeStampStartTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime TimeStampStartTime = new DateTime(
+            1970,
+            1,
+            1,
+            0,
+            0,
+            0,
+            DateTimeKind.Utc
+        );
 
         /// <summary>
         /// DateTime转换为10位时间戳（单位：秒）

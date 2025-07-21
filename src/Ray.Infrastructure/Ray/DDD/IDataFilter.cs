@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ray.DDD
 {
-    public interface IDataFilter<TFilter> where TFilter : class
+    public interface IDataFilter<TFilter>
+        where TFilter : class
     {
         IDisposable Enable();
 
@@ -16,7 +13,8 @@ namespace Ray.DDD
         bool IsEnabled { get; }
     }
 
-    public class DataFilter<TFilter> : IDataFilter<TFilter> where TFilter : class
+    public class DataFilter<TFilter> : IDataFilter<TFilter>
+        where TFilter : class
     {
         public bool IsEnabled
         {
@@ -52,10 +50,10 @@ namespace Ray.DDD
 
         private void EnsureInitialized()
         {
-            if (_filter.Value != null) return;
+            if (_filter.Value != null)
+                return;
 
             _filter.Value = new DataFilterState(true);
         }
     }
-
 }

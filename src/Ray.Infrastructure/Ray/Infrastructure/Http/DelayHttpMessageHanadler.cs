@@ -12,16 +12,25 @@ namespace Ray.Infrastructure.Http
         private readonly ILogger<DelayHttpMessageHandler> _logger;
         private readonly HttpClientCustomOptions _options;
 
-        public DelayHttpMessageHandler(IOptions<HttpClientCustomOptions> options, ILogger<DelayHttpMessageHandler> logger)
+        public DelayHttpMessageHandler(
+            IOptions<HttpClientCustomOptions> options,
+            ILogger<DelayHttpMessageHandler> logger
+        )
         {
             _logger = logger;
             _options = options.Value;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken
+        )
         {
             _logger.LogInformation("休眠{seconds}秒", _options.RandomDelaySecondsBetweenCalls);
-            await Task.Delay(TimeSpan.FromSeconds(_options.RandomDelaySecondsBetweenCalls), cancellationToken);
+            await Task.Delay(
+                TimeSpan.FromSeconds(_options.RandomDelaySecondsBetweenCalls),
+                cancellationToken
+            );
 
             var response = await base.SendAsync(request, cancellationToken);
 

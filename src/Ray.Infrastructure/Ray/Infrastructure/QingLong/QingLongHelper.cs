@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Ray.Infrastructure.QingLong
 {
@@ -38,9 +38,14 @@ namespace Ray.Infrastructure.QingLong
             return token;
         }
 
-        public static async Task AddOrUpdateEnvAsync(IQingLongApi qingLongApi,
-            string key, string value, string remark = "",
-            ILogger logger = null, CancellationToken cancellationToken = default)
+        public static async Task AddOrUpdateEnvAsync(
+            IQingLongApi qingLongApi,
+            string key,
+            string value,
+            string remark = "",
+            ILogger logger = null,
+            CancellationToken cancellationToken = default
+        )
         {
             var re = await qingLongApi.GetEnvsAsync(key);
 
@@ -51,7 +56,7 @@ namespace Ray.Infrastructure.QingLong
                 {
                     name = key,
                     value = value,
-                    remarks = remark
+                    remarks = remark,
                 };
                 var addRe = await qingLongApi.AddEnvsAsync(new List<AddQingLongEnv> { add });
                 logger?.LogInformation(addRe.Code == 200 ? "新增成功！" : addRe.ToJsonStr());
@@ -69,9 +74,7 @@ namespace Ray.Infrastructure.QingLong
                     id = oldEnv.id,
                     name = oldEnv.name,
                     value = value,
-                    remarks = string.IsNullOrWhiteSpace(remark)
-                        ? oldEnv.remarks
-                        : remark
+                    remarks = string.IsNullOrWhiteSpace(remark) ? oldEnv.remarks : remark,
                 };
 
                 var updateRe = await qingLongApi.UpdateEnvsAsync(update);
@@ -96,10 +99,16 @@ namespace Ray.Infrastructure.QingLong
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task SaveStatesByUserNameAsync(IQingLongApi qingLongApi,
-            string userName, string keyBeforeNum, string value,
-            string keyAfterNum = "States", string userNameKeyAfterNum = "UserName",
-            ILogger logger = null, CancellationToken cancellationToken = default)
+        public static async Task SaveStatesByUserNameAsync(
+            IQingLongApi qingLongApi,
+            string userName,
+            string keyBeforeNum,
+            string value,
+            string keyAfterNum = "States",
+            string userNameKeyAfterNum = "UserName",
+            ILogger logger = null,
+            CancellationToken cancellationToken = default
+        )
         {
             //查env
             var re = await qingLongApi.GetEnvsAsync(keyBeforeNum);
@@ -109,7 +118,11 @@ namespace Ray.Infrastructure.QingLong
                 return;
             }
 
-            var userNameList = re.Data.Where(x => x.name.StartsWith(keyBeforeNum) && x.name.EndsWith(userNameKeyAfterNum)).ToList();
+            var userNameList = re
+                .Data.Where(x =>
+                    x.name.StartsWith(keyBeforeNum) && x.name.EndsWith(userNameKeyAfterNum)
+                )
+                .ToList();
             QingLongEnv userNameOldEnv = userNameList.FirstOrDefault(x => x.value == userName);
 
             if (userNameOldEnv == null)
@@ -117,8 +130,8 @@ namespace Ray.Infrastructure.QingLong
                 throw new Exception($"用户名不存在：{userName}");
             }
 
-            var num = userNameOldEnv.name
-                .Replace(keyBeforeNum, "")
+            var num = userNameOldEnv
+                .name.Replace(keyBeforeNum, "")
                 .Replace(userNameKeyAfterNum, "")
                 .Replace("_", "");
             var key = $"{keyBeforeNum}__{num}__{keyAfterNum}";
@@ -136,9 +149,15 @@ namespace Ray.Infrastructure.QingLong
         /// <param name="logger"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task SaveStatesByStatesAsync(IQingLongApi qingLongApi,
-            string keyBeforeNum, string value, string containValue, string keyAfterNum = "States",
-            ILogger logger = null, CancellationToken cancellationToken = default)
+        public static async Task SaveStatesByStatesAsync(
+            IQingLongApi qingLongApi,
+            string keyBeforeNum,
+            string value,
+            string containValue,
+            string keyAfterNum = "States",
+            ILogger logger = null,
+            CancellationToken cancellationToken = default
+        )
         {
             //查env
             var re = await qingLongApi.GetEnvsAsync(keyBeforeNum);
@@ -151,7 +170,9 @@ namespace Ray.Infrastructure.QingLong
 
             logger?.LogDebug(re.Data.ToJsonStr());
 
-            var statesList = re.Data.Where(x => x.name.StartsWith(keyBeforeNum) && x.name.EndsWith(keyAfterNum)).ToList();
+            var statesList = re
+                .Data.Where(x => x.name.StartsWith(keyBeforeNum) && x.name.EndsWith(keyAfterNum))
+                .ToList();
             QingLongEnv oldEnv = statesList.FirstOrDefault(x => x.value.Contains(containValue));
 
             if (oldEnv != null)
@@ -179,22 +200,27 @@ namespace Ray.Infrastructure.QingLong
             var maxNum = -1;
             if (statesList.Any())
             {
-                maxNum = statesList.Select(x =>
-                {
-                    var num = x.name.Replace($"{keyBeforeNum}__", "").Replace($"__{keyAfterNum}", "");
-                    var parseSuc = int.TryParse(num, out int envNum);
-                    return parseSuc ? envNum : 0;
-                }).Max();
+                maxNum = statesList
+                    .Select(x =>
+                    {
+                        var num = x
+                            .name.Replace($"{keyBeforeNum}__", "")
+                            .Replace($"__{keyAfterNum}", "");
+                        var parseSuc = int.TryParse(num, out int envNum);
+                        return parseSuc ? envNum : 0;
+                    })
+                    .Max();
             }
             var name = $"{keyBeforeNum}__{maxNum + 1}";
-            if (!string.IsNullOrWhiteSpace(keyAfterNum)) name += $"__{keyAfterNum}";
+            if (!string.IsNullOrWhiteSpace(keyAfterNum))
+                name += $"__{keyAfterNum}";
             logger?.LogInformation("Key：{key}", name);
 
             var add = new AddQingLongEnv()
             {
                 name = name,
                 value = value,
-                remarks = containValue
+                remarks = containValue,
             };
             var addRe = await qingLongApi.AddEnvsAsync(new List<AddQingLongEnv> { add });
             logger?.LogInformation(addRe.Code == 200 ? "新增成功！" : addRe.ToJsonStr());

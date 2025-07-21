@@ -7,10 +7,12 @@ namespace Ray.Infrastructure.Helpers.Page
 {
     public class PageHelper
     {
-        public static PageResult<T> Page<T>(IEnumerable<T> source,
+        public static PageResult<T> Page<T>(
+            IEnumerable<T> source,
             int pageSize,
             int pageIndex,
-            Expression<Func<T, bool>> filter = null)
+            Expression<Func<T, bool>> filter = null
+        )
         {
             return Page<T>(source.AsQueryable(), pageSize, pageIndex, filter);
         }
@@ -24,12 +26,20 @@ namespace Ray.Infrastructure.Helpers.Page
         /// <param name="pageIndex"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static PageResult<T> Page<T>(IQueryable<T> source,
+        public static PageResult<T> Page<T>(
+            IQueryable<T> source,
             int pageSize,
             int pageIndex,
-            Expression<Func<T, bool>> filter = null)
+            Expression<Func<T, bool>> filter = null
+        )
         {
-            return PageOrder<T, string>(source, pageSize, pageIndex, orderByExpression: null, filter: filter);
+            return PageOrder<T, string>(
+                source,
+                pageSize,
+                pageIndex,
+                orderByExpression: null,
+                filter: filter
+            );
         }
 
         /// <summary>
@@ -44,14 +54,23 @@ namespace Ray.Infrastructure.Helpers.Page
         /// <param name="sortOrder"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static PageResult<T> PageOrder<T, TK>(IEnumerable<T> source,
+        public static PageResult<T> PageOrder<T, TK>(
+            IEnumerable<T> source,
             int pageSize,
             int pageIndex,
             Expression<Func<T, TK>> orderByExpression,
             SortEnum sortOrder = SortEnum.Original,
-            Expression<Func<T, bool>> filter = null)
+            Expression<Func<T, bool>> filter = null
+        )
         {
-            return PageOrder<T, TK>(source.AsQueryable(), pageSize, pageIndex, orderByExpression: orderByExpression, sortOrder: sortOrder, filter: filter);
+            return PageOrder<T, TK>(
+                source.AsQueryable(),
+                pageSize,
+                pageIndex,
+                orderByExpression: orderByExpression,
+                sortOrder: sortOrder,
+                filter: filter
+            );
         }
 
         /// <summary>
@@ -66,22 +85,24 @@ namespace Ray.Infrastructure.Helpers.Page
         /// <param name="sortOrder"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static PageResult<T> PageOrder<T, TK>(IQueryable<T> source,
+        public static PageResult<T> PageOrder<T, TK>(
+            IQueryable<T> source,
             int pageSize,
             int pageIndex,
             Expression<Func<T, TK>> orderByExpression,
             SortEnum sortOrder = SortEnum.Original,
-            Expression<Func<T, bool>> filter = null)
+            Expression<Func<T, bool>> filter = null
+        )
         {
-            int totalCount;//筛选后总条数
-            int totalPages;//筛选后总页数
+            int totalCount; //筛选后总条数
+            int totalPages; //筛选后总页数
 
             //筛选
-            if (filter != null) source = source.Where(filter);
+            if (filter != null)
+                source = source.Where(filter);
             totalCount = source.Count();
-            totalPages = totalCount > 0
-                ? (int)Math.Ceiling((double)totalCount / (double)pageSize)
-                : 0;
+            totalPages =
+                totalCount > 0 ? (int)Math.Ceiling((double)totalCount / (double)pageSize) : 0;
 
             //pageIndex为0，只返回计算的分页信息
             if (pageIndex == 0)
@@ -92,15 +113,16 @@ namespace Ray.Infrastructure.Helpers.Page
                     PageIndex = 0,
                     PageSize = pageSize,
                     TotalCount = totalCount,
-                    TotalPages = totalPages
+                    TotalPages = totalPages,
                 };
             }
 
             //排序
-            if (orderByExpression != null) source = Order(source, orderByExpression, sortOrder);
+            if (orderByExpression != null)
+                source = Order(source, orderByExpression, sortOrder);
 
             //分页
-            int skipCount = pageSize * (pageIndex - 1);//跳过条数
+            int skipCount = pageSize * (pageIndex - 1); //跳过条数
             source = source.Skip(skipCount).Take(pageSize);
 
             return new PageResult<T>
@@ -109,39 +131,44 @@ namespace Ray.Infrastructure.Helpers.Page
                 PageIndex = totalPages <= 0 ? 1 : (pageIndex > totalPages ? totalPages : pageIndex),
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                TotalPages = totalPages
+                TotalPages = totalPages,
             };
         }
 
-
-        public static Dictionary<int, List<T>> PageOrderToDic<T, TK>(IQueryable<T> source,
+        public static Dictionary<int, List<T>> PageOrderToDic<T, TK>(
+            IQueryable<T> source,
             int pageSize,
             Expression<Func<T, TK>> orderByExpression,
             SortEnum sortOrder = SortEnum.Original,
-            Expression<Func<T, bool>> filter = null)
+            Expression<Func<T, bool>> filter = null
+        )
         {
             var dic = new Dictionary<int, List<T>>();
 
             //筛选
-            if (filter != null) source = source.Where(filter);
+            if (filter != null)
+                source = source.Where(filter);
 
             //排序
-            if (orderByExpression != null) source = Order(source, orderByExpression, sortOrder);
+            if (orderByExpression != null)
+                source = Order(source, orderByExpression, sortOrder);
 
             int pageCount = source.Count() / pageSize + 1;
 
             for (int pageIndex = 1; pageIndex <= pageCount; pageIndex++)
             {
-                int skipCount = pageSize * (pageIndex - 1);//跳过条数
+                int skipCount = pageSize * (pageIndex - 1); //跳过条数
                 dic.Add(pageIndex, source.Skip(skipCount).Take(pageSize).ToList());
             }
 
             return dic;
         }
 
-        private static IQueryable<T> Order<T, TK>(IQueryable<T> source,
+        private static IQueryable<T> Order<T, TK>(
+            IQueryable<T> source,
             Expression<Func<T, TK>> orderByExpression,
-            SortEnum sortOrder = SortEnum.Original)
+            SortEnum sortOrder = SortEnum.Original
+        )
         {
             //排序
             switch (sortOrder)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Ray.Infrastructure.Helpers
@@ -65,5 +63,4 @@ namespace Ray.Infrastructure.Helpers
             return resList;
         }
     }
-
 }

@@ -1,16 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Refit;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace Ray.Infrastructure.QingLong
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddQingLongRefitApi(this IServiceCollection services, Action<IHttpClientBuilder> builderAction = null)
+        public static IServiceCollection AddQingLongRefitApi(
+            this IServiceCollection services,
+            Action<IHttpClientBuilder> builderAction = null
+        )
         {
-            var qinglongHost = Environment.GetEnvironmentVariable("QL_URL") ?? "http://localhost:5600";
+            var qinglongHost =
+                Environment.GetEnvironmentVariable("QL_URL") ?? "http://localhost:5600";
 
             var token = "";
             try
@@ -23,7 +26,8 @@ namespace Ray.Infrastructure.QingLong
                 Console.WriteLine($"获取token异常：{ex.Message}");
             }
 
-            IHttpClientBuilder builder = services.AddRefitClient<IQingLongApi>()
+            IHttpClientBuilder builder = services
+                .AddRefitClient<IQingLongApi>()
                 .ConfigureHttpClient(c =>
                 {
                     c.BaseAddress = new Uri(qinglongHost);

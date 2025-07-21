@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ray.Infrastructure.Extensions.Json
+﻿namespace Ray.Infrastructure.Extensions.Json
 {
     public class FilterPropsOption
     {

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using SkiaSharp;
 using ZXing;
 using ZXing.Common;
-using ZXing.QrCode;
 using ZXing.SkiaSharp;
 using ZXing.SkiaSharp.Rendering;
 
@@ -29,6 +27,7 @@ namespace Ray.Infrastructure.BarCode
             img.Dispose();
             return re;
         }
+
         /// <summary>
         /// 解析二维码（使用SkiaSharp）
         /// </summary>
@@ -78,14 +77,13 @@ namespace Ray.Infrastructure.BarCode
                     //PossibleFormats = new[] { BarcodeFormat.QR_CODE },
                     TryHarder = true,
                     //PureBarcode = false
-                }
+                },
             };
 
             Result result = reader.Decode(img);
 
             return result;
         }
-
 
         #endregion
 
@@ -94,13 +92,17 @@ namespace Ray.Infrastructure.BarCode
         /// <summary>
         /// 生成二维码（使用SkiaSharp）
         /// </summary>
-        public static SKBitmap EncodeSkiaSharp(string text, BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE, Action<ZXing.Common.EncodingOptions> optionsAction = null)
+        public static SKBitmap EncodeSkiaSharp(
+            string text,
+            BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE,
+            Action<ZXing.Common.EncodingOptions> optionsAction = null
+        )
         {
             var options = new ZXing.Common.EncodingOptions
             {
                 Width = 20,
                 Height = 20,
-                Margin = 1
+                Margin = 1,
             };
             optionsAction?.Invoke(options);
 
@@ -108,7 +110,7 @@ namespace Ray.Infrastructure.BarCode
             {
                 Format = barcodeFormat,
                 Options = options,
-                Renderer = new SKBitmapRenderer()
+                Renderer = new SKBitmapRenderer(),
             };
             SKBitmap bitmap = writer.Write(text);
             return bitmap;
@@ -121,20 +123,24 @@ namespace Ray.Infrastructure.BarCode
         /// <param name="barcodeFormat"></param>
         /// <param name="optionsAction"></param>
         /// <returns></returns>
-        public static Image<Rgba32> EncodeByImageSharp(string text, BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE, Action<ZXing.Common.EncodingOptions> optionsAction = null)
+        public static Image<Rgba32> EncodeByImageSharp(
+            string text,
+            BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE,
+            Action<ZXing.Common.EncodingOptions> optionsAction = null
+        )
         {
             var options = new ZXing.Common.EncodingOptions
             {
                 Width = 300,
                 Height = 300,
-                Margin = 1
+                Margin = 1,
             };
             optionsAction?.Invoke(options);
 
             var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32>
             {
                 Format = barcodeFormat,
-                Options = options
+                Options = options,
             };
 
             Image<Rgba32> image = writer.WriteAsImageSharp<Rgba32>(text);
@@ -196,32 +202,37 @@ namespace Ray.Infrastructure.BarCode
             return points;
         }
 
-        public static void PrintQrCode(SKBitmap skBitmap,
+        public static void PrintQrCode(
+            SKBitmap skBitmap,
             char pointChar = '\u2588', //默认"█"，全色方块（与底色相反）
             char emptyChar = ' ', //
             bool reverseColor = false, //反转颜色
             Action<string> onRowPrintProcess = null
-            )
+        )
         {
             var points = AdaptToPoints(skBitmap);
             PrintQrCode(points, pointChar, emptyChar, reverseColor, onRowPrintProcess);
         }
-        public static void PrintQrCode(Image<Rgba32> image,
+
+        public static void PrintQrCode(
+            Image<Rgba32> image,
             char pointChar = '\u2588', //默认"█"，全色方块（与底色相反）
             char emptyChar = ' ', //
             bool reverseColor = false, //反转颜色
             Action<string> onRowPrintProcess = null
-            )
+        )
         {
             var points = AdaptToPoints(image);
             PrintQrCode(points, pointChar, emptyChar, reverseColor, onRowPrintProcess);
         }
-        public static void PrintQrCode(bool[,] points,
+
+        public static void PrintQrCode(
+            bool[,] points,
             char pointChar = '\u2588',
             char emptyChar = ' ',
             bool reverseColor = false,
             Action<string> onRowPrintProcess = null
-            )
+        )
         {
             var lightColorCharReal = reverseColor ? emptyChar : pointChar;
             var darkColorCharReal = reverseColor ? pointChar : emptyChar;
@@ -255,16 +266,24 @@ namespace Ray.Infrastructure.BarCode
             }
         }
 
-        public static void PrintSmallQrCode(SKBitmap skBitmap, Action<string> onRowPrintProcess = null)
+        public static void PrintSmallQrCode(
+            SKBitmap skBitmap,
+            Action<string> onRowPrintProcess = null
+        )
         {
             var points = AdaptToPoints(skBitmap);
             PrintSmallQrCode(points, onRowPrintProcess);
         }
-        public static void PrintSmallQrCode(Image<Rgba32> image, Action<string> onRowPrintProcess = null)
+
+        public static void PrintSmallQrCode(
+            Image<Rgba32> image,
+            Action<string> onRowPrintProcess = null
+        )
         {
             var points = AdaptToPoints(image);
             PrintSmallQrCode(points, onRowPrintProcess);
         }
+
         public static void PrintSmallQrCode(bool[,] points, Action<string> onRowPrintProcess = null)
         {
             onRowPrintProcess ??= Console.WriteLine;

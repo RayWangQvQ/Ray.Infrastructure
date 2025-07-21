@@ -1,5 +1,4 @@
-﻿
-namespace Ray.Infrastructure.Http
+﻿namespace Ray.Infrastructure.Http
 {
     public class HttpClientCustomOptions
     {
