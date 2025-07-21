@@ -8,6 +8,7 @@ on:
 env:
   DOTNET_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
+  CSHARPIER_VERSION: '0.30.5'
 
 jobs:
   pr-check:
@@ -48,7 +49,7 @@ jobs:
         echo "✅ Build passed!"
 
     - name: Install CSharpier
-      run: dotnet tool install -g csharpier
+      run: dotnet tool install -g csharpier --version ${{ env.CSHARPIER_VERSION }}
 
     - name: Check code formatting
       run: |
