@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="..\..\common.props" />
+	
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
 		<Description>RayInfrastructure</Description>
 		<RootNamespace />
 		<AssemblyName>Ray.Infrastructure</AssemblyName>
 		<PackageId>Ray.Infrastructure</PackageId>
-		<Version>0.0.25</Version>
 		<Authors>Ray</Authors>
 		<Company>Ray</Company>
 		<PackageProjectUrl>https://github.com/RayWangQvQ/Ray.Infrastructure</PackageProjectUrl>
