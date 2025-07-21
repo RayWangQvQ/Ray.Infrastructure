@@ -5,16 +5,17 @@
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
           <Format>cobertura</Format>
-          <Exclude>[coverlet.*.tests?]*,[*]Coverlet.Core*</Exclude>
           <Include>[Ray.Infrastructure]*</Include>
+          <IncludeDirectory>../src/Ray.Infrastructure/</IncludeDirectory>
+          <Exclude>[Ray.Infrastructure.Tests]*,[*]*.Tests*,[xunit.*]*,[coverlet.*]*</Exclude>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-          <ExcludeByFile>**/Views/**/*.cs,**/wwwroot/**/*.cs</ExcludeByFile>
+          <ExcludeByFile>**/bin/**/*,**/obj/**/*</ExcludeByFile>
           <SingleHit>false</SingleHit>
           <UseSourceLink>true</UseSourceLink>
           <IncludeTestAssembly>false</IncludeTestAssembly>
+          <SkipAutoProps>true</SkipAutoProps>
         </Configuration>
       </DataCollector>
     </DataCollectors>
   </DataCollectionRunSettings>
 </RunSettings>
-

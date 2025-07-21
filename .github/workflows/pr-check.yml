@@ -68,7 +68,8 @@ jobs:
         # Remove any existing test results
         rm -rf ./TestResults
         
-        dotnet test test/Ray.Infrastructure.Tests/Ray.Infrastructure.Tests.csproj \
+        # Run tests with coverage using a simpler approach
+        dotnet test \
           --configuration Release \
           --no-build \
           --verbosity normal \
@@ -76,7 +77,9 @@ jobs:
           --results-directory ./TestResults/ \
           --logger trx \
           --logger "console;verbosity=detailed" \
-          --settings coverlet.runsettings
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Include="[Ray.Infrastructure]*" \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[Ray.Infrastructure.Tests]*"
         
         if [ $? -ne 0 ]; then
           echo "❌ Unit tests failed!"
@@ -84,9 +87,13 @@ jobs:
         fi
         echo "✅ Unit tests passed!"
         
-        # List coverage files for debugging
+        # Convert coverage files for debugging
         echo "📋 Coverage files generated:"
-        find ./TestResults -name "*.xml" -o -name "*.cobertura.xml" | head -10
+        find ./TestResults -name "*.xml" -o -name "coverage.*" | head -10
+        
+        # Try to find and copy coverage files to a predictable location
+        find ./TestResults -name "coverage.cobertura.xml" -exec cp {} ./TestResults/ \;
+        find ./TestResults -name "*.cobertura.xml" -exec cp {} ./TestResults/coverage.cobertura.xml \;
 
     - name: Install ReportGenerator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
@@ -94,10 +101,28 @@ jobs:
     - name: Generate coverage report
       run: |
         echo "📊 Generating coverage report..."
+        
+        # List all coverage files for debugging
+        echo "🔍 All coverage files found:"
+        find ./TestResults -type f -name "*coverage*" -o -name "*.xml" | sort
+        
+        # Check if coverage files exist and show their size
+        if [ -f "./TestResults/coverage.cobertura.xml" ]; then
+          echo "📋 Main coverage file found:"
+          ls -la ./TestResults/coverage.cobertura.xml
+          echo "📄 Coverage file preview:"
+          head -20 ./TestResults/coverage.cobertura.xml
+        else
+          echo "⚠️ Main coverage file not found, looking for alternatives..."
+          find ./TestResults -name "*.cobertura.xml" -exec ls -la {} \; -exec head -10 {} \;
+        fi
+        
+        # Generate report with more verbose output
         reportgenerator \
-          -reports:"TestResults/**/coverage.cobertura.xml" \
+          -reports:"TestResults/**/coverage.cobertura.xml;TestResults/**/*.cobertura.xml" \
           -targetdir:"CoverageReport" \
-          -reporttypes:"Html;Cobertura;JsonSummary"
+          -reporttypes:"Html;Cobertura;JsonSummary" \
+          -verbosity:Info
 
     - name: Check coverage threshold
       run: |
