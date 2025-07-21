@@ -18,18 +18,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MediatR" Version="12.0.1" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
-		<PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
-		<PackageReference Include="Rougamo.Fody" Version="1.4.1" />
+		<PackageReference Include="MediatR" Version="13.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
+		<PackageReference Include="Rougamo.Fody" Version="5.0.1" />
 		<PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.15" />
-		<PackageReference Include="ZXing.Net.Bindings.SkiaSharp" Version="0.16.13" />
+		<PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.17" />
+		<PackageReference Include="ZXing.Net.Bindings.SkiaSharp" Version="0.16.21" />
 	</ItemGroup>
 
 	<ItemGroup>

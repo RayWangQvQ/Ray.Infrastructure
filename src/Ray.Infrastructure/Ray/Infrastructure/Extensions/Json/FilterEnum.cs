@@ -1,8 +1,7 @@
-﻿namespace Ray.Infrastructure.Extensions.Json
+﻿namespace Ray.Infrastructure.Extensions.Json;
+
+public enum FilterEnum
 {
-    public enum FilterEnum
-    {
-        Ignore,
-        Retain,
-    }
+    Ignore,
+    Retain,
 }
