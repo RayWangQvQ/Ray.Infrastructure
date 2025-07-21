@@ -9,6 +9,7 @@ env:
   DOTNET_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   CSHARPIER_VERSION: '0.30.5'
+  COVERAGE_THRESHOLD: '90'
 
 jobs:
   pr-check:
@@ -64,16 +65,39 @@ jobs:
     - name: Run unit tests
       run: |
         echo "🧪 Running unit tests..."
-        dotnet test --configuration Release --no-build --verbosity normal \
+        # Remove any existing test results
+        rm -rf ./TestResults
+        
+        dotnet test test/Ray.Infrastructure.Tests/Ray.Infrastructure.Tests.csproj \
+          --configuration Release \
+          --no-build \
+          --verbosity normal \
           --collect:"XPlat Code Coverage" \
           --results-directory ./TestResults/ \
           --logger trx \
-          --logger "console;verbosity=detailed"
+          --logger "console;verbosity=detailed" \
+          /p:CollectCoverage=true \
+          /p:CoverletOutputFormat=cobertura \
+          /p:CoverletOutput=./TestResults/coverage.cobertura.xml \
+          /p:Include="[Ray.Infrastructure]*" \
+          /p:Exclude="[Ray.Infrastructure.Tests]*"
+        
+          --settings coverlet.runsettings \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Include="[Ray.Infrastructure]*"
         if [ $? -ne 0 ]; then
           echo "❌ Unit tests failed!"
+        
+        # List coverage files for debugging
+        echo "📋 Coverage files generated:"
+        find ./TestResults -name "*.xml" -o -name "*.cobertura.xml" | head -10
           exit 1
         fi
         echo "✅ Unit tests passed!"
+        
+        # List coverage files for debugging
+        echo "📋 Coverage files generated:"
+        find ./TestResults -name "*.cobertura.xml" -o -name "coverage.cobertura.xml" | head -10
 
     - name: Install ReportGenerator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
@@ -98,10 +122,10 @@ jobs:
           # Remove % sign and convert to number for comparison
           coverage_num=$(echo $coverage | sed 's/%//')
           
-          if (( $(echo "$coverage_num >= 90" | bc -l) )); then
-            echo "✅ Coverage check passed! (${coverage}% >= 90%)"
+          if (( $(echo "$coverage_num >= ${{ env.COVERAGE_THRESHOLD }}" | bc -l) )); then
+            echo "✅ Coverage check passed! (${coverage}% >= ${{ env.COVERAGE_THRESHOLD }}%)"
           else
-            echo "❌ Coverage check failed! Current: ${coverage}%, Required: 90%"
+            echo "❌ Coverage check failed! Current: ${coverage}%, Required: ${{ env.COVERAGE_THRESHOLD }}%"
             exit 1
           fi
         else
@@ -200,7 +224,7 @@ jobs:
           - 🔨 **Build**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
           - 🎨 **Code Formatting**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}  
           - 🧪 **Unit Tests**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
-          - 📈 **Coverage (≥90%)**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
+          - 📈 **Coverage (≥${{ env.COVERAGE_THRESHOLD }}%)**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
           - 📦 **Package Creation**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
           - 🚀 **Preview Publish**: ${jobStatus === 'success' ? '✅ Passed' : '❌ Failed'}
           
