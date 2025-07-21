@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
 		<Description>RayInfrastructure</Description>
 		<RootNamespace />
 		<AssemblyName>Ray.Infrastructure</AssemblyName>
 		<PackageId>Ray.Infrastructure</PackageId>
-		<Version>0.0.22</Version>
+		<Version>0.0.25</Version>
 		<Authors>Ray</Authors>
 		<Company>Ray</Company>
 		<PackageProjectUrl>https://github.com/RayWangQvQ/Ray.Infrastructure</PackageProjectUrl>
@@ -17,6 +17,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MediatR" Version="12.0.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
