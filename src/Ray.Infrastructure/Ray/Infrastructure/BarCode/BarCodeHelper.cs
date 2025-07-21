@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using SkiaSharp;
 using ZXing;
 using ZXing.Common;
-using ZXing.QrCode;
 using ZXing.SkiaSharp;
 using ZXing.SkiaSharp.Rendering;
 
