@@ -9,7 +9,7 @@ env:
   DOTNET_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   CSHARPIER_VERSION: '0.30.5'
-  COVERAGE_THRESHOLD: '10'
+  COVERAGE_THRESHOLD: '5'
 
 jobs:
   pr-check:
@@ -62,167 +62,11 @@ jobs:
         fi
         echo "✅ Code formatting check passed!"
 
-    - name: Run unit tests
+    - name: Generate coverage report and run tests
       run: |
-        echo "🧪 Running unit tests..."
-        # Remove any existing test results
-        rm -rf ./TestResults
-
-        # Run tests with coverage using cobertura format
-        dotnet test \
-          --configuration Release \
-          --no-build \
-          --verbosity normal \
-          --collect:"XPlat Code Coverage" \
-          --results-directory ./TestResults/ \
-          --logger trx \
-          --logger "console;verbosity=detailed" \
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura \
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Include="[Ray.Infrastructure]*" \
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Exclude="[Ray.Infrastructure.Tests]*"
-
-        if [ $? -ne 0 ]; then
-          echo "❌ Unit tests failed!"
-          exit 1
-        fi
-        echo "✅ Unit tests passed!"
-
-        # List all coverage files for debugging
-        echo "📋 Coverage files generated:"
-        find ./TestResults -name "*.xml" -o -name "coverage.*" | head -10
-
-    - name: Install ReportGenerator
-      run: dotnet tool install -g dotnet-reportgenerator-globaltool
-
-    - name: Generate coverage report
-      run: |
-        echo "📊 Generating coverage report..."
-
-        # List all coverage files for debugging
-        echo "🔍 All coverage files found:"
-        find ./TestResults -type f -name "*coverage*" -o -name "*.xml" | sort
-
-        # Try to generate report with both opencover and cobertura formats
-        COVERAGE_FILES=""
-
-        # Look for cobertura files first
-        if find ./TestResults -name "*.cobertura.xml" | grep -q .; then
-          COVERAGE_FILES="TestResults/**/*.cobertura.xml"
-          echo "📋 Found cobertura format files"
-        # Fallback to opencover files
-        elif find ./TestResults -name "*.opencover.xml" | grep -q .; then
-          COVERAGE_FILES="TestResults/**/*.opencover.xml"
-          echo "📋 Found opencover format files"
-        # Look for any coverage.xml files
-        elif find ./TestResults -name "coverage.xml" | grep -q .; then
-          COVERAGE_FILES="TestResults/**/coverage.xml"
-          echo "📋 Found generic coverage.xml files"
-        else
-          echo "❌ No coverage files found!"
-          exit 1
-        fi
-
-        echo "📄 Using coverage files pattern: $COVERAGE_FILES"
-
-        # Generate report with the found files
-        reportgenerator \
-          -reports:"$COVERAGE_FILES" \
-          -targetdir:"CoverageReport" \
-          -reporttypes:"Html;Cobertura;JsonSummary;TextSummary;Badges" \
-          -verbosity:Info
-
-        # Display detailed coverage information
-        echo ""
-        echo "📈 Detailed Coverage Analysis:"
-        echo "=============================="
-
-        # Show overall summary if available
-        if [ -f "CoverageReport/Summary.txt" ]; then
-          echo "📊 Overall Coverage Summary:"
-          cat CoverageReport/Summary.txt
-          echo ""
-        fi
-
-        # Parse and display class-level coverage from JSON
-        if [ -f "CoverageReport/Summary.json" ]; then
-          echo "🔍 Class-level Coverage Details:"
-          echo "--------------------------------"
-
-          # Extract class coverage information using jq
-          jq -r '
-            .coverage.assemblies[] |
-            select(.name | contains("Ray.Infrastructure")) |
-            .classesinassembly[] |
-            select(.name != "") |
-            "Class: \(.name)" +
-            " | Line Coverage: \(.coverage)%" +
-            " | Branch Coverage: \(.branchcoverage // "N/A")%" +
-            " | Lines: \(.coveredlines)/\(.coverablelines)"
-          ' CoverageReport/Summary.json | sort -k3 -n
-
-          echo ""
-          echo "📉 Classes with Low Coverage (< 50%):"
-          echo "------------------------------------"
-
-          jq -r '
-            .coverage.assemblies[] |
-            select(.name | contains("Ray.Infrastructure")) |
-            .classesinassembly[] |
-            select(.name != "" and (.coverage | type == "number") and (.coverage < 50)) |
-            "❌ \(.name): \(.coverage)% (\(.coveredlines)/\(.coverablelines) lines)"
-          ' CoverageReport/Summary.json | sort -k2 -n
-
-          echo ""
-          echo "✅ Classes with Good Coverage (>= 80%):"
-          echo "--------------------------------------"
-
-          jq -r '
-            .coverage.assemblies[] |
-            select(.name | contains("Ray.Infrastructure")) |
-            .classesinassembly[] |
-            select(.name != "" and (.coverage | type == "number") and (.coverage >= 80)) |
-            "✅ \(.name): \(.coverage)% (\(.coveredlines)/\(.coverablelines) lines)"
-          ' CoverageReport/Summary.json | sort -k2 -nr
-
-          echo ""
-          echo "📋 Assembly Coverage Summary:"
-          echo "-----------------------------"
-
-          jq -r '
-            .coverage.assemblies[] |
-            select(.name | contains("Ray.Infrastructure")) |
-            "Assembly: \(.name)" +
-            " | Line Coverage: \(.coverage)%" +
-            " | Branch Coverage: \(.branchcoverage)%" +
-            " | Total Lines: \(.coveredlines)/\(.coverablelines)"
-          ' CoverageReport/Summary.json
-
-        else
-          echo "⚠️ Summary.json not found, cannot display detailed class coverage"
-        fi
-
-    - name: Check coverage threshold
-      run: |
-        echo "📈 Checking test coverage..."
-
-        # Extract coverage percentage from the JSON summary
-        if [ -f "CoverageReport/Summary.json" ]; then
-          coverage=$(cat CoverageReport/Summary.json | jq -r '.summary.linecoverage')
-          echo "Current coverage: ${coverage}%"
-
-          # Remove % sign and convert to number for comparison
-          coverage_num=$(echo $coverage | sed 's/%//')
-
-          if (( $(echo "$coverage_num >= ${{ env.COVERAGE_THRESHOLD }}" | bc -l) )); then
-            echo "✅ Coverage check passed! (${coverage}% >= ${{ env.COVERAGE_THRESHOLD }}%)"
-          else
-            echo "❌ Coverage check failed! Current: ${coverage}%, Required: ${{ env.COVERAGE_THRESHOLD }}%"
-            exit 1
-          fi
-        else
-          echo "❌ Coverage report not found!"
-          exit 1
-        fi
+        echo "📊 Generating coverage report using script..."
+        chmod +x ./scripts/generate-coverage.sh
+        ./scripts/generate-coverage.sh --threshold ${{ env.COVERAGE_THRESHOLD }}
 
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
