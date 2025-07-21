@@ -27,7 +27,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Cache NuGet packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -109,7 +109,7 @@ jobs:
         fi
 
     - name: Upload coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: CoverageReport/
@@ -142,7 +142,7 @@ jobs:
         ls -la ./bin/nupkgs/
 
     - name: Upload NuGet package artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nuget-package
         path: ./bin/nupkgs/*.nupkg
