@@ -4,7 +4,10 @@ namespace System.Collections.Generic;
 
 public static class RayDictionaryExtensions
 {
-    public static void AddIfNotExist<TKey, TValue>(this Dictionary<TKey, TValue> dic, Dictionary<TKey, TValue> addDic)
+    public static void AddIfNotExist<TKey, TValue>(
+        this Dictionary<TKey, TValue> dic,
+        Dictionary<TKey, TValue> addDic
+    )
     {
         foreach (var item in addDic)
         {
@@ -12,9 +15,14 @@ public static class RayDictionaryExtensions
         }
     }
 
-    public static void AddIfNotExist<TKey, TValue>(this Dictionary<TKey, TValue> dic, TKey key, TValue value)
+    public static void AddIfNotExist<TKey, TValue>(
+        this Dictionary<TKey, TValue> dic,
+        TKey key,
+        TValue value
+    )
     {
-        if (dic.ContainsKey(key)) return;
+        if (dic.ContainsKey(key))
+            return;
         dic.Add(key, value);
     }
 
@@ -29,7 +37,11 @@ public static class RayDictionaryExtensions
         return sb.ToString();
     }
 
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
+    public static TValue GetOrAdd<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary,
+        TKey key,
+        Func<TKey, TValue> factory
+    )
     {
         TValue obj;
         if (dictionary.TryGetValue(key, out obj))
@@ -40,7 +52,11 @@ public static class RayDictionaryExtensions
         return dictionary[key] = factory(key);
     }
 
-    public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
+    public static TValue GetOrAdd<TKey, TValue>(
+        this IDictionary<TKey, TValue> dictionary,
+        TKey key,
+        Func<TValue> factory
+    )
     {
         return dictionary.GetOrAdd(key, k => factory());
     }

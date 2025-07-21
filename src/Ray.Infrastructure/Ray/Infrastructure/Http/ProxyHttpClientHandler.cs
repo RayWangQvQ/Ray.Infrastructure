@@ -7,7 +7,10 @@ namespace Ray.Infrastructure.Http
 {
     public class ProxyHttpClientHandler : HttpClientHandler
     {
-        public ProxyHttpClientHandler(IOptions<HttpClientCustomOptions> options, ILogger<ProxyHttpClientHandler> logger)
+        public ProxyHttpClientHandler(
+            IOptions<HttpClientCustomOptions> options,
+            ILogger<ProxyHttpClientHandler> logger
+        )
         {
             var configs = options.Value;
             var proxyAddress = configs.WebProxy;

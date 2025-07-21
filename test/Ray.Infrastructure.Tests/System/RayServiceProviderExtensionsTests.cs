@@ -54,7 +54,7 @@ namespace Ray.Infrastructure.Tests.System
             // Act & Assert
             var act1 = () => serviceProvider.GetEngine();
             var act2 = () => serviceProvider.GetRootScope();
-            
+
             act1.Should().NotThrow();
             act2.Should().NotThrow();
         }

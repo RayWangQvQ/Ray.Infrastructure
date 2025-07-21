@@ -13,7 +13,6 @@ namespace QrCodeTests
         {
             var text = "Hello World";
 
-
             //var bitmap = BarCodeHelper.Encode(text);
 
             //BarCodeHelper.PrintQrCode(bitmap, reverseColor: true);
@@ -25,16 +24,19 @@ namespace QrCodeTests
             //BarCodeHelper.PrintSmallQrCode(bitmap);
 
 
-            Image<Rgba32>? bitmap= BarCodeHelper.EncodeByImageSharp(text);
+            Image<Rgba32>? bitmap = BarCodeHelper.EncodeByImageSharp(text);
             var base64Str = bitmap.ToBase64String(PngFormat.Instance);
 
             var result = BarCodeHelper.DecodeByBase64Str(base64Str);
 
-            var miniImage = BarCodeHelper.EncodeByImageSharp(text,optionsAction: op =>
-            {
-                op.Width = 22;
-                op.Height = 22;
-            });
+            var miniImage = BarCodeHelper.EncodeByImageSharp(
+                text,
+                optionsAction: op =>
+                {
+                    op.Width = 22;
+                    op.Height = 22;
+                }
+            );
             BarCodeHelper.PrintQrCode(miniImage, reverseColor: true);
             Console.WriteLine(string.Concat(Enumerable.Repeat(Environment.NewLine, 5)));
         }

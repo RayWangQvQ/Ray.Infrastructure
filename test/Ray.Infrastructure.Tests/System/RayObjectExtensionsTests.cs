@@ -1,5 +1,5 @@
-using FluentAssertions;
 using System.Reflection;
+using FluentAssertions;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -89,17 +89,32 @@ namespace Ray.Infrastructure.Tests.System
         public void BindingFlags_Properties_ShouldHaveCorrectValues()
         {
             // Assert
-            RayObjectExtensions.FlagsOfAll.Should().Be(
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-            
-            RayObjectExtensions.FlagsOfAllCurrent.Should().Be(
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            
-            RayObjectExtensions.FlagsOfAllPulic.Should().Be(
-                BindingFlags.Public | BindingFlags.Instance);
-            
-            RayObjectExtensions.FlagsOfAllPulicCurrent.Should().Be(
-                BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            RayObjectExtensions
+                .FlagsOfAll.Should()
+                .Be(
+                    BindingFlags.NonPublic
+                        | BindingFlags.Public
+                        | BindingFlags.Static
+                        | BindingFlags.Instance
+                );
+
+            RayObjectExtensions
+                .FlagsOfAllCurrent.Should()
+                .Be(
+                    BindingFlags.NonPublic
+                        | BindingFlags.Public
+                        | BindingFlags.Static
+                        | BindingFlags.Instance
+                        | BindingFlags.DeclaredOnly
+                );
+
+            RayObjectExtensions
+                .FlagsOfAllPulic.Should()
+                .Be(BindingFlags.Public | BindingFlags.Instance);
+
+            RayObjectExtensions
+                .FlagsOfAllPulicCurrent.Should()
+                .Be(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         }
     }
 }

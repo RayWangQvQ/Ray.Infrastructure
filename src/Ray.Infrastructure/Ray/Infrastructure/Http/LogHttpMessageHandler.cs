@@ -18,12 +18,17 @@ namespace Ray.Infrastructure.Http
             _logger = logger;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken
+        )
         {
             var req = request;
             var msg = $"[Request]";
 
-            _logger.LogDebug($"{msg} {req.Method} {req.RequestUri.PathAndQuery} {req.RequestUri.Scheme}/{req.Version}");
+            _logger.LogDebug(
+                $"{msg} {req.Method} {req.RequestUri.PathAndQuery} {req.RequestUri.Scheme}/{req.Version}"
+            );
             _logger.LogDebug($"{msg} Host: {req.RequestUri.Scheme}://{req.RequestUri.Host}");
 
             foreach (var header in req.Headers)
@@ -34,13 +39,16 @@ namespace Ray.Infrastructure.Http
                 foreach (var header in req.Content.Headers)
                     _logger.LogDebug($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
 
-                if (req.Content is StringContent || this.IsTextBasedContentType(req.Headers) || this.IsTextBasedContentType(req.Content.Headers))
+                if (
+                    req.Content is StringContent
+                    || this.IsTextBasedContentType(req.Headers)
+                    || this.IsTextBasedContentType(req.Content.Headers)
+                )
                 {
                     var result = await req.Content.ReadAsStringAsync();
 
                     _logger.LogDebug($"{msg} Content:");
                     _logger.LogDebug($"{msg} {string.Join("", result.Cast<char>().Take(255))}...");
-
                 }
             }
 
@@ -56,7 +64,9 @@ namespace Ray.Infrastructure.Http
 
             var resp = response;
 
-            _logger.LogDebug($"{msg} {req.RequestUri.Scheme.ToUpper()}/{resp.Version} {(int)resp.StatusCode} {resp.ReasonPhrase}");
+            _logger.LogDebug(
+                $"{msg} {req.RequestUri.Scheme.ToUpper()}/{resp.Version} {(int)resp.StatusCode} {resp.ReasonPhrase}"
+            );
 
             foreach (var header in resp.Headers)
                 _logger.LogDebug($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
@@ -66,7 +76,11 @@ namespace Ray.Infrastructure.Http
                 foreach (var header in resp.Content.Headers)
                     _logger.LogDebug($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
 
-                if (resp.Content is StringContent || this.IsTextBasedContentType(resp.Headers) || this.IsTextBasedContentType(resp.Content.Headers))
+                if (
+                    resp.Content is StringContent
+                    || this.IsTextBasedContentType(resp.Headers)
+                    || this.IsTextBasedContentType(resp.Content.Headers)
+                )
                 {
                     start = DateTime.Now;
                     var result = await resp.Content.ReadAsStringAsync();
@@ -81,7 +95,15 @@ namespace Ray.Infrastructure.Http
             return response;
         }
 
-        readonly string[] types = new[] { "html", "text", "xml", "json", "txt", "x-www-form-urlencoded" };
+        readonly string[] types = new[]
+        {
+            "html",
+            "text",
+            "xml",
+            "json",
+            "txt",
+            "x-www-form-urlencoded",
+        };
 
         bool IsTextBasedContentType(HttpHeaders headers)
         {

@@ -3,9 +3,7 @@
     /// <summary>
     /// 无主键实体
     /// </summary>
-    public interface IEntity
-    {
-    }
+    public interface IEntity { }
 
     /// <summary>
     /// 主键实体

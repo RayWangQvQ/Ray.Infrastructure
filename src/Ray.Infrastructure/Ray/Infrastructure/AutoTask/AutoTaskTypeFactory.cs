@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace Ray.Infrastructure.AutoTask
 {
@@ -16,7 +16,8 @@ namespace Ray.Infrastructure.AutoTask
             foreach (var type in types)
             {
                 var autoTaskAttr = type.GetCustomAttribute<AutoTaskAttribute>();
-                if (autoTaskAttr == null) continue;
+                if (autoTaskAttr == null)
+                    continue;
 
                 var info = new AutoTaskInfo(autoTaskAttr.Code, autoTaskAttr.Alias, type);
                 _dic[index++] = info;
@@ -38,7 +39,9 @@ namespace Ray.Infrastructure.AutoTask
 
         public AutoTaskInfo GetByCode(string code)
         {
-            return _dic.Values.FirstOrDefault(x => string.Equals(x.Code, code, StringComparison.CurrentCultureIgnoreCase));
+            return _dic.Values.FirstOrDefault(x =>
+                string.Equals(x.Code, code, StringComparison.CurrentCultureIgnoreCase)
+            );
         }
     }
 

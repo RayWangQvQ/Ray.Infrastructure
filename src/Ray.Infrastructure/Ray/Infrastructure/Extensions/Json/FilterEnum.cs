@@ -3,6 +3,6 @@
     public enum FilterEnum
     {
         Ignore,
-        Retain
+        Retain,
     }
 }

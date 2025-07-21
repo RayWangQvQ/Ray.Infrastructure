@@ -18,15 +18,15 @@ public static class RayServiceProviderExtensions
     public static object GetEngine(this IServiceProvider serviceProvider)
     {
         //因为容器、引擎、引擎域都实现了容器接口（IServiceProvider），所以要分情况
-        if (serviceProvider is ServiceProvider)//根容器
+        if (serviceProvider is ServiceProvider) //根容器
         {
             return serviceProvider.GetFieldValue("_engine");
         }
-        if (serviceProvider.GetType().Name.EndsWith("ServiceProviderEngine"))//引擎
+        if (serviceProvider.GetType().Name.EndsWith("ServiceProviderEngine")) //引擎
         {
             return serviceProvider;
         }
-        if (serviceProvider.GetType().Name.Contains("ServiceProviderEngineScope"))//引擎域
+        if (serviceProvider.GetType().Name.Contains("ServiceProviderEngineScope")) //引擎域
         {
             return serviceProvider.GetPropertyValue("Engine");
         }
@@ -40,8 +40,7 @@ public static class RayServiceProviderExtensions
     /// <returns>代表根域（根IServiceScope）的ServiceProviderEngineScope对象</returns>
     public static object GetRootScope(this IServiceProvider serviceProvider)
     {
-        return serviceProvider.GetEngine()
-            .GetPropertyValue("RootScope");
+        return serviceProvider.GetEngine().GetPropertyValue("RootScope");
         /**
          * 引擎对象是唯一的，且引擎对象的RootScope属性指向根域（根引擎域）
          * ServiceProviderEngineScope对象为internal访问权限，所以返回object
@@ -54,12 +53,14 @@ public static class RayServiceProviderExtensions
     /// </summary>
     /// <param name="serviceProvider"></param>
     /// <returns></returns>
-    public static IEnumerable<ServiceDescriptor> GetServiceDescriptorsFromScope(this IServiceProvider serviceProvider)
+    public static IEnumerable<ServiceDescriptor> GetServiceDescriptorsFromScope(
+        this IServiceProvider serviceProvider
+    )
     {
         return serviceProvider
-                .GetEngine()//拿到引擎对象
-                .GetPropertyValue("CallSiteFactory")//拿到引擎的CallSiteFactory属性（CallSiteFactory对象）
-                .GetFieldValue("_descriptors")//CallSiteFactory对象内的_descriptors字段即是服务描述集合
+                .GetEngine() //拿到引擎对象
+                .GetPropertyValue("CallSiteFactory") //拿到引擎的CallSiteFactory属性（CallSiteFactory对象）
+                .GetFieldValue("_descriptors") //CallSiteFactory对象内的_descriptors字段即是服务描述集合
             as IEnumerable<ServiceDescriptor>;
     }
 
@@ -68,9 +69,12 @@ public static class RayServiceProviderExtensions
     /// </summary>
     /// <param name="serviceProvider">容器</param>
     /// <returns></returns>
-    public static Dictionary<ServiceCacheKeyDto, object> GetResolvedServicesFromScope(this IServiceProvider serviceProvider)
+    public static Dictionary<ServiceCacheKeyDto, object> GetResolvedServicesFromScope(
+        this IServiceProvider serviceProvider
+    )
     {
-        Dictionary<ServiceCacheKeyDto, object> result = new Dictionary<ServiceCacheKeyDto, object>();
+        Dictionary<ServiceCacheKeyDto, object> result =
+            new Dictionary<ServiceCacheKeyDto, object>();
 
         object obj = serviceProvider
             .GetRequiredService<IServiceProvider>() //引擎域
@@ -81,9 +85,7 @@ public static class RayServiceProviderExtensions
             .JsonDeserialize<IEnumerable<ServiceCacheKeyDto>>()
             .ToList();
 
-        List<object> values = ((IEnumerable<object>)obj.GetPropertyValue("Values"))
-            .ToList();
-
+        List<object> values = ((IEnumerable<object>)obj.GetPropertyValue("Values")).ToList();
 
         for (int i = 0; i < keys.Count(); i++)
         {
@@ -100,10 +102,10 @@ public static class RayServiceProviderExtensions
     /// <returns></returns>
     public static IEnumerable<object> GetDisposablesFromScope(this IServiceProvider serviceProvider)
     {
-        var objList = serviceProvider
-                .GetRequiredService<IServiceProvider>()//引擎域
-                .GetFieldValue("_disposables")
-            as IEnumerable<object>;
+        var objList =
+            serviceProvider
+                .GetRequiredService<IServiceProvider>() //引擎域
+                .GetFieldValue("_disposables") as IEnumerable<object>;
 
         return objList ?? new List<object>();
     }

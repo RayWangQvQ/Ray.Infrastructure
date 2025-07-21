@@ -18,9 +18,11 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
 
             // Assert
             var serviceProvider = services.BuildServiceProvider();
-            var serviceDescriptor = services.FirstOrDefault(s => s.ServiceType.IsGenericType && 
-                                                                 s.ServiceType.GetGenericTypeDefinition() == typeof(IDataFilter<>));
-            
+            var serviceDescriptor = services.FirstOrDefault(s =>
+                s.ServiceType.IsGenericType
+                && s.ServiceType.GetGenericTypeDefinition() == typeof(IDataFilter<>)
+            );
+
             serviceDescriptor.Should().NotBeNull();
             serviceDescriptor!.ImplementationType.Should().NotBeNull();
             serviceDescriptor.Lifetime.Should().Be(ServiceLifetime.Singleton);

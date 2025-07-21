@@ -28,12 +28,17 @@ namespace Ray.Infrastructure.Extensions.Json
             this._retain = ignoreOption.FilterEnum;
         }
 
-        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+        protected override IList<JsonProperty> CreateProperties(
+            Type type,
+            MemberSerialization memberSerialization
+        )
         {
             IList<JsonProperty> list = base.CreateProperties(type, memberSerialization);
-            return list.Where(p => _retain == FilterEnum.Ignore
-                ? !_props.Contains(p.PropertyName)
-                : _props.Contains(p.PropertyName))
+            return list.Where(p =>
+                    _retain == FilterEnum.Ignore
+                        ? !_props.Contains(p.PropertyName)
+                        : _props.Contains(p.PropertyName)
+                )
                 .ToList();
         }
     }

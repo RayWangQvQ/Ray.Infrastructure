@@ -21,7 +21,8 @@ namespace Ray.Infrastructure.Helpers
             //todo:需要当前项目引用所有程序集，待改善
             //1.获取当前程序集所有引用程序集
             Assembly entryAssembly = Assembly.GetEntryAssembly();
-            List<Assembly> assemblies = entryAssembly?.GetReferencedAssemblies()
+            List<Assembly> assemblies = entryAssembly
+                ?.GetReferencedAssemblies()
                 .Select(Assembly.Load)
                 .Where(m => m.FullName.Contains("Ray"))
                 .ToList();
@@ -54,11 +55,14 @@ namespace Ray.Infrastructure.Helpers
         {
             var list = new List<Assembly>();
             DependencyContext dependencyContext = DependencyContext.Default;
-            IEnumerable<CompilationLibrary> libs = dependencyContext.CompileLibraries
-                .Where(lib => !lib.Serviceable && lib.Type != "package" && lib.Name.StartsWith("Ray"));
+            IEnumerable<CompilationLibrary> libs = dependencyContext.CompileLibraries.Where(lib =>
+                !lib.Serviceable && lib.Type != "package" && lib.Name.StartsWith("Ray")
+            );
             foreach (var lib in libs)
             {
-                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
+                Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(
+                    new AssemblyName(lib.Name)
+                );
                 list.Add(assembly);
             }
             return list.ToArray();

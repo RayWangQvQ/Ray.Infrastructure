@@ -37,16 +37,18 @@ public static class RayObjectExtensions
      * DoNotWrapExceptions = 0x02000000,// 此标记用于禁止把异常包装到 TargetInvocationException 中。
      */
     //所有成员
-    public static BindingFlags FlagsOfAll => BindingFlags.NonPublic
-                                            | BindingFlags.Public
-                                            | BindingFlags.Static
-                                            | BindingFlags.Instance;
+    public static BindingFlags FlagsOfAll =>
+        BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+
     //所有当前类的成员，不包括继承自父类的
     public static BindingFlags FlagsOfAllCurrent => FlagsOfAll | BindingFlags.DeclaredOnly;
+
     //所有公有实例成员
     public static BindingFlags FlagsOfAllPulic => BindingFlags.Public | BindingFlags.Instance;
+
     //所有当前类公有成员
-    public static BindingFlags FlagsOfAllPulicCurrent => FlagsOfAllPulic | BindingFlags.DeclaredOnly;
+    public static BindingFlags FlagsOfAllPulicCurrent =>
+        FlagsOfAllPulic | BindingFlags.DeclaredOnly;
     #endregion
 
     #region 反射
@@ -59,15 +61,25 @@ public static class RayObjectExtensions
     /// <param name="fieldName"></param>
     /// <param name="bindingFlags"></param>
     /// <returns></returns>
-    public static Dictionary<string, object> GetFieldsWithValue(this object obj, string fieldName = null, BindingFlags? bindingFlags = null, bool includingBase = true)
+    public static Dictionary<string, object> GetFieldsWithValue(
+        this object obj,
+        string fieldName = null,
+        BindingFlags? bindingFlags = null,
+        bool includingBase = true
+    )
     {
-
         Type type = obj.GetType();
 
         return GetFieldsWithValue(type, obj, fieldName, bindingFlags, includingBase);
     }
 
-    private static Dictionary<string, object> GetFieldsWithValue(Type type, object obj, string fieldName = null, BindingFlags? bindingFlags = null, bool includingBase = false)
+    private static Dictionary<string, object> GetFieldsWithValue(
+        Type type,
+        object obj,
+        string fieldName = null,
+        BindingFlags? bindingFlags = null,
+        bool includingBase = false
+    )
     {
         var dic = new Dictionary<string, object>();
 
@@ -78,7 +90,8 @@ public static class RayObjectExtensions
         FieldInfo[] fieldInfos = type.GetFields(flags);
 
         //筛选字段名称（精确筛选）
-        if (!string.IsNullOrWhiteSpace(fieldName)) fieldInfos = fieldInfos.Where(x => x.Name == fieldName).ToArray();
+        if (!string.IsNullOrWhiteSpace(fieldName))
+            fieldInfos = fieldInfos.Where(x => x.Name == fieldName).ToArray();
 
         //取值
         foreach (var fi in fieldInfos)
@@ -106,9 +119,7 @@ public static class RayObjectExtensions
     {
         try
         {
-            return obj.GetFieldsWithValue(fieldName)
-                .FirstOrDefault()
-                .Value;
+            return obj.GetFieldsWithValue(fieldName).FirstOrDefault().Value;
         }
         catch
         {
@@ -125,7 +136,12 @@ public static class RayObjectExtensions
     /// <param name="index"></param>
     /// <param name="bindingFlags"></param>
     /// <returns></returns>
-    public static Dictionary<string, object> GetPropertiesWithValue(this object obj, string fieldName = null, object[] index = null, BindingFlags? bindingFlags = null)
+    public static Dictionary<string, object> GetPropertiesWithValue(
+        this object obj,
+        string fieldName = null,
+        object[] index = null,
+        BindingFlags? bindingFlags = null
+    )
     {
         var dic = new Dictionary<string, object>();
 
@@ -137,7 +153,8 @@ public static class RayObjectExtensions
         PropertyInfo[] pis = type.GetProperties(flags);
 
         //筛选属性名称（精确筛选）
-        if (!string.IsNullOrWhiteSpace(fieldName)) pis = pis.Where(x => x.Name == fieldName).ToArray();
+        if (!string.IsNullOrWhiteSpace(fieldName))
+            pis = pis.Where(x => x.Name == fieldName).ToArray();
 
         //取值
         foreach (var fi in pis)
@@ -159,9 +176,7 @@ public static class RayObjectExtensions
     {
         try
         {
-            return obj.GetPropertiesWithValue(fieldName, index)
-                .FirstOrDefault()
-                .Value;
+            return obj.GetPropertiesWithValue(fieldName, index).FirstOrDefault().Value;
         }
         catch
         {
@@ -176,7 +191,8 @@ public static class RayObjectExtensions
 
     public static string ToJsonStr(this object obj)
     {
-        if (obj == null) return null;
+        if (obj == null)
+            return null;
         return JsonConvert.SerializeObject(obj);
     }
 
@@ -190,7 +206,7 @@ public static class RayObjectExtensions
     }
 
     #endregion
-    
+
     #region Description
 
     /// <summary>获取枚举变量值的 Description 属性</summary>
@@ -205,9 +221,13 @@ public static class RayObjectExtensions
         {
             Type type = obj.GetType();
             DescriptionAttribute descriptionAttribute = !isTop
-                ? (DescriptionAttribute)Attribute.GetCustomAttribute(
-                    type.GetField(Enum.GetName(type, obj)), typeof(DescriptionAttribute))
-                : (DescriptionAttribute)Attribute.GetCustomAttribute(type, typeof(DescriptionAttribute));
+                ? (DescriptionAttribute)
+                    Attribute.GetCustomAttribute(
+                        type.GetField(Enum.GetName(type, obj)),
+                        typeof(DescriptionAttribute)
+                    )
+                : (DescriptionAttribute)
+                    Attribute.GetCustomAttribute(type, typeof(DescriptionAttribute));
             if (descriptionAttribute != null)
             {
                 if (!string.IsNullOrEmpty(descriptionAttribute.Description))
@@ -233,8 +253,13 @@ public static class RayObjectExtensions
         {
             Type type = obj.GetType();
             DefaultValueAttribute defaultValueAttribute = !isTop
-                ? (DefaultValueAttribute)Attribute.GetCustomAttribute(type.GetField(Enum.GetName(type, obj)), typeof(DefaultValueAttribute))
-                : (DefaultValueAttribute)Attribute.GetCustomAttribute(type, typeof(DefaultValueAttribute));
+                ? (DefaultValueAttribute)
+                    Attribute.GetCustomAttribute(
+                        type.GetField(Enum.GetName(type, obj)),
+                        typeof(DefaultValueAttribute)
+                    )
+                : (DefaultValueAttribute)
+                    Attribute.GetCustomAttribute(type, typeof(DefaultValueAttribute));
             if (defaultValueAttribute != null)
             {
                 if (!string.IsNullOrEmpty(defaultValueAttribute.Value.ToString()))
@@ -249,5 +274,4 @@ public static class RayObjectExtensions
     }
 
     #endregion
-
 }

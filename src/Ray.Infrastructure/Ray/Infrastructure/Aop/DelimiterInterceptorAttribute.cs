@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Rougamo;
-using Rougamo.Context;
-using System;
+﻿using System;
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Rougamo;
+using Rougamo.Context;
 
 namespace Ray.Infrastructure.Aop
 {
@@ -14,19 +14,22 @@ namespace Ray.Infrastructure.Aop
         private readonly DelimiterScale _delimiterScale;
 
         public DelimiterInterceptorAttribute(
-            string title = null, 
+            string title = null,
             DelimiterScale delimiterScale = DelimiterScale.M
-            )
+        )
         {
             _title = title;
             _delimiterScale = delimiterScale;
 
-            _logger = RayGlobal.ServiceProviderRoot.GetRequiredService<ILogger<DelimiterInterceptorAttribute>>(); //todo:lazy load
+            _logger = RayGlobal.ServiceProviderRoot.GetRequiredService<
+                ILogger<DelimiterInterceptorAttribute>
+            >(); //todo:lazy load
         }
 
         public override void OnEntry(MethodContext context)
         {
-            if (_title == null) return;
+            if (_title == null)
+                return;
 
             string end = _delimiterScale == DelimiterScale.L ? Environment.NewLine : "";
             string delimiter = GetDelimiterStr();
@@ -35,12 +38,15 @@ namespace Ray.Infrastructure.Aop
 
         public override void OnExit(MethodContext context)
         {
-            if (_title == null) return;
+            if (_title == null)
+                return;
 
             string delimiter = GetDelimiterStr();
             var append = new string(GetDelimiterChar(), _title.Length);
 
-            _logger.LogInformation(delimiter + append + "结束" + append + delimiter + Environment.NewLine);
+            _logger.LogInformation(
+                delimiter + append + "结束" + append + delimiter + Environment.NewLine
+            );
         }
 
         private string GetDelimiterStr()
@@ -62,7 +68,11 @@ namespace Ray.Infrastructure.Aop
                 case DelimiterScale.S:
                     return '-';
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(_delimiterScale), _delimiterScale, null);
+                    throw new ArgumentOutOfRangeException(
+                        nameof(_delimiterScale),
+                        _delimiterScale,
+                        null
+                    );
             }
         }
     }

@@ -6,11 +6,11 @@ using Microsoft.Extensions.Options;
 
 namespace Ray.Infrastructure.AutoTask
 {
-    public class TargetAccountManager<TTargetAccountInfo> where TTargetAccountInfo : TargetAccountInfo
+    public class TargetAccountManager<TTargetAccountInfo>
+        where TTargetAccountInfo : TargetAccountInfo
     {
-        public TargetAccountManager(IOptions<List<TTargetAccountInfo>> accountsOptions):this(accountsOptions.Value)
-        {
-        }
+        public TargetAccountManager(IOptions<List<TTargetAccountInfo>> accountsOptions)
+            : this(accountsOptions.Value) { }
 
         public TargetAccountManager(List<TTargetAccountInfo> accounts)
         {
@@ -44,7 +44,9 @@ namespace Ray.Infrastructure.AutoTask
             source.GetAllCookies().ToList().ForEach(x => x.Expired = true);
             if (source.Count > 0)
             {
-                var m = source.GetType().GetMethod("AgeCookies", BindingFlags.NonPublic | BindingFlags.Instance);
+                var m = source
+                    .GetType()
+                    .GetMethod("AgeCookies", BindingFlags.NonPublic | BindingFlags.Instance);
                 m.Invoke(source, new object[] { null });
             }
 
@@ -62,12 +64,13 @@ namespace Ray.Infrastructure.AutoTask
 
     public class TargetAccountInfo
     {
-        public TargetAccountInfo()
-        {
-            
-        }
+        public TargetAccountInfo() { }
 
-        public TargetAccountInfo(string userName, string pwd, CookieContainer cookieContainer = null)
+        public TargetAccountInfo(
+            string userName,
+            string pwd,
+            CookieContainer cookieContainer = null
+        )
         {
             UserName = userName;
             Pwd = pwd;

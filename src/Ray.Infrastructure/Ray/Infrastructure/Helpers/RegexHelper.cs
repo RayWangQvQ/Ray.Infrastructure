@@ -63,5 +63,4 @@ namespace Ray.Infrastructure.Helpers
             return resList;
         }
     }
-
 }
