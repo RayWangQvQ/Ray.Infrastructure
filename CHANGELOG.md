@@ -1,3 +1,5 @@
+## 0.0.26
+- Upgrade packages
 ## 0.0.25
 - Migration to .NET 8
 - Add unit tests
