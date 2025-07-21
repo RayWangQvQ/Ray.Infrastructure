@@ -128,8 +128,78 @@ jobs:
         reportgenerator \
           -reports:"$COVERAGE_FILES" \
           -targetdir:"CoverageReport" \
-          -reporttypes:"Html;Cobertura;JsonSummary" \
+          -reporttypes:"Html;Cobertura;JsonSummary;TextSummary;Badges" \
           -verbosity:Info
+        
+        # Display detailed coverage information
+        echo ""
+        echo "📈 Detailed Coverage Analysis:"
+        echo "=============================="
+        
+        # Show overall summary if available
+        if [ -f "CoverageReport/Summary.txt" ]; then
+          echo "📊 Overall Coverage Summary:"
+          cat CoverageReport/Summary.txt
+          echo ""
+        fi
+        
+        # Parse and display class-level coverage from JSON
+        if [ -f "CoverageReport/Summary.json" ]; then
+          echo "🔍 Class-level Coverage Details:"
+          echo "--------------------------------"
+          
+          # Extract class coverage information using jq
+          jq -r '
+            .coverage.assemblies[] | 
+            select(.name | contains("Ray.Infrastructure")) | 
+            .classes[] | 
+            select(.name != "") |
+            "Class: \(.name)" + 
+            " | Line Coverage: \(.lineCoverage)%" + 
+            " | Branch Coverage: \(.branchCoverage)%" + 
+            " | Lines: \(.coveredLines)/\(.coverableLines)"
+          ' CoverageReport/Summary.json | sort -k3 -n
+          
+          echo ""
+          echo "📉 Classes with Low Coverage (< 50%):"
+          echo "------------------------------------"
+          
+          jq -r '
+            .coverage.assemblies[] | 
+            select(.name | contains("Ray.Infrastructure")) | 
+            .classes[] | 
+            select(.name != "" and (.lineCoverage | tonumber) < 50) |
+            "❌ \(.name): \(.lineCoverage)% (\(.coveredLines)/\(.coverableLines) lines)"
+          ' CoverageReport/Summary.json | sort -k2 -n
+          
+          echo ""
+          echo "✅ Classes with Good Coverage (>= 80%):"
+          echo "--------------------------------------"
+          
+          jq -r '
+            .coverage.assemblies[] | 
+            select(.name | contains("Ray.Infrastructure")) | 
+            .classes[] | 
+            select(.name != "" and (.lineCoverage | tonumber) >= 80) |
+            "✅ \(.name): \(.lineCoverage)% (\(.coveredLines)/\(.coverableLines) lines)"
+          ' CoverageReport/Summary.json | sort -k2 -nr
+          
+          echo ""
+          echo "📋 Namespace Coverage Summary:"
+          echo "-----------------------------"
+          
+          jq -r '
+            .coverage.assemblies[] | 
+            select(.name | contains("Ray.Infrastructure")) | 
+            "Assembly: \(.name)" +
+            " | Line Coverage: \(.lineCoverage)%" +
+            " | Branch Coverage: \(.branchCoverage)%" +
+            " | Total Lines: \(.coveredLines)/\(.coverableLines)"
+          ' CoverageReport/Summary.json
+          
+        else
+          echo "⚠️ Summary.json not found, cannot display detailed class coverage"
+        fi
 
     - name: Check coverage threshold
       run: |
