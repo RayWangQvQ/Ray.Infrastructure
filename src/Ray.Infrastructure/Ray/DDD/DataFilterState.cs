@@ -1,4 +1,4 @@
-﻿namespace Ray.DDD;
+namespace Ray.DDD;
 
 public class DataFilterState
 {
