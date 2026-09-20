@@ -6,7 +6,8 @@ on:
   workflow_dispatch:  # 允许手动触发
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_LEGACY_RUNTIME_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
 
 jobs:
@@ -24,7 +25,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: |
+          ${{ env.DOTNET_VERSION }}
+          ${{ env.DOTNET_LEGACY_RUNTIME_VERSION }}
 
     - name: Read version from common.props
       id: read-version
