@@ -3,7 +3,7 @@
 	<Import Project="..\..\common.props" />
 	
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net10.0;net8.0;net7.0;net6.0</TargetFrameworks>
 		<Description>RayInfrastructure</Description>
 		<RootNamespace />
 		<AssemblyName>Ray.Infrastructure</AssemblyName>
@@ -24,12 +24,11 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
-		<PackageReference Include="Rougamo.Fody" Version="5.0.1" />
-		<PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Rougamo.Fody" Version="5.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.17" />
-		<PackageReference Include="ZXing.Net.Bindings.SkiaSharp" Version="0.16.21" />
+		<PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.20" />
+		<PackageReference Include="ZXing.Net.Bindings.SkiaSharp" Version="0.16.24" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -6,7 +6,8 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '10.0.x'
+  DOTNET_LEGACY_RUNTIME_VERSION: '8.0.x'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   CSHARPIER_VERSION: '0.30.5'
   COVERAGE_THRESHOLD: '5'
@@ -26,7 +27,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: |
+          ${{ env.DOTNET_VERSION }}
+          ${{ env.DOTNET_LEGACY_RUNTIME_VERSION }}
 
     - name: Cache NuGet packages
       uses: actions/cache@v4
