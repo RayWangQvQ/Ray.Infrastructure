@@ -5,8 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Ray.Infrastructure.QingLong;
 
@@ -32,8 +31,8 @@ public class QingLongHelper
 
         var authJson = File.ReadAllText(authFile);
 
-        var jb = JsonConvert.DeserializeObject<JObject>(authJson);
-        var token = jb["token"]?.ToString();
+        using var doc = JsonDocument.Parse(authJson);
+        var token = doc.RootElement.TryGetProperty("token", out var tokenEl) ? tokenEl.GetString() : null;
 
         return token;
     }

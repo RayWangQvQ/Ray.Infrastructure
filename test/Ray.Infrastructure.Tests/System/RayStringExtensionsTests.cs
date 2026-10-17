@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -11,7 +11,7 @@ namespace Ray.Infrastructure.Tests.System
         {
             // Arrange
             var testObject = new { Name = "Test", Age = 25 };
-            var json = JsonConvert.SerializeObject(testObject);
+            var json = JsonSerializer.Serialize(testObject);
 
             // Act
             var result = json.JsonDeserialize<object>();
@@ -28,7 +28,7 @@ namespace Ray.Infrastructure.Tests.System
             var invalidJson = "{ invalid json }";
 
             // Act & Assert
-            Assert.Throws<JsonReaderException>(() => invalidJson.JsonDeserialize<object>());
+            Assert.Throws<JsonException>(() => invalidJson.JsonDeserialize<object>());
         }
 
         [Fact]
@@ -42,13 +42,13 @@ namespace Ray.Infrastructure.Tests.System
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().Contain("    "); // 检查是否包含缩进
+            result.Should().Contain("  \"name\":"); // 检查是否包含缩进
             result.Should().Contain("\"name\": \"test\"");
             result.Should().Contain("\"age\": 25");
         }
 
         [Fact]
-        public void AsFormatJsonStr_WithInvalidJson_ShouldReturnOriginalString()
+        public void AsFormatJsonStr_WithInvalidJson_ShouldThrowException()
         {
             // Arrange
             var invalidJson = "invalid json";
@@ -56,7 +56,7 @@ namespace Ray.Infrastructure.Tests.System
             // Act & Assert
             // AsFormatJsonStr在遇到无效JSON时会抛出异常，这是预期行为
             var act = () => invalidJson.AsFormatJsonStr();
-            act.Should().Throw<JsonReaderException>();
+            act.Should().Throw<JsonException>();
         }
 
         [Fact]
