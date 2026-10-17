@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -15,7 +15,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = date.LastDayOfMonth();
 
             // Assert
-            result.Should().Be(new DateTime(2023, 1, 31));
+            result.ShouldBe(new DateTime(2023, 1, 31));
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = date.LastDayOfMonth();
 
             // Assert
-            result.Should().Be(new DateTime(2024, 2, 29));
+            result.ShouldBe(new DateTime(2024, 2, 29));
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = date.LastDayOfMonth();
 
             // Assert
-            result.Should().Be(new DateTime(2023, 2, 28));
+            result.ShouldBe(new DateTime(2023, 2, 28));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = date.LastDayOfMonth();
 
             // Assert
-            result.Should().Be(new DateTime(2023, 12, 31));
+            result.ShouldBe(new DateTime(2023, 12, 31));
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = date.ToTimeStamp();
 
             // Assert
-            result.Should().Be(1672531200); // Unix timestamp for 2023-01-01 00:00:00 UTC
+            result.ShouldBe(1672531200); // Unix timestamp for 2023-01-01 00:00:00 UTC
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = epoch.ToTimeStamp();
 
             // Assert
-            result.Should().Be(0);
+            result.ShouldBe(0);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = date.ToLongTimeStamp();
 
             // Assert
-            result.Should().Be(1672531200000); // Unix timestamp in milliseconds
+            result.ShouldBe(1672531200000); // Unix timestamp in milliseconds
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = epoch.ToLongTimeStamp();
 
             // Assert
-            result.Should().Be(0);
+            result.ShouldBe(0);
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = localDate.ToTimeStamp();
 
             // Assert
-            result.Should().BeGreaterThan(0);
+            result.ShouldBeGreaterThan(0);
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = localDate.ToLongTimeStamp();
 
             // Assert
-            result.Should().BeGreaterThan(0);
+            result.ShouldBeGreaterThan(0);
         }
     }
 }

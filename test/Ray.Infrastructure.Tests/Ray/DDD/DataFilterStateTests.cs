@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Ray.DDD;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.Ray.DDD
@@ -13,7 +13,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var state = new DataFilterState(true);
 
             // Assert
-            state.IsEnabled.Should().BeTrue();
+            state.IsEnabled.ShouldBeTrue();
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var state = new DataFilterState(false);
 
             // Assert
-            state.IsEnabled.Should().BeFalse();
+            state.IsEnabled.ShouldBeFalse();
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             state.IsEnabled = true;
 
             // Assert
-            state.IsEnabled.Should().BeTrue();
+            state.IsEnabled.ShouldBeTrue();
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var state = new DataFilterState(expectedValue);
 
             // Assert
-            state.IsEnabled.Should().Be(expectedValue);
+            state.IsEnabled.ShouldBe(expectedValue);
         }
     }
 }

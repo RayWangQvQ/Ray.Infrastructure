@@ -1,6 +1,6 @@
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Ray.DDD;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.Ray.DDD
@@ -23,9 +23,9 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
                 && s.ServiceType.GetGenericTypeDefinition() == typeof(IDataFilter<>)
             );
 
-            serviceDescriptor.Should().NotBeNull();
-            serviceDescriptor!.ImplementationType.Should().NotBeNull();
-            serviceDescriptor.Lifetime.Should().Be(ServiceLifetime.Singleton);
+            serviceDescriptor.ShouldNotBeNull();
+            serviceDescriptor!.ImplementationType.ShouldNotBeNull();
+            serviceDescriptor.Lifetime.ShouldBe(ServiceLifetime.Singleton);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var result = services.AddDataFilter();
 
             // Assert
-            result.Should().BeSameAs(services);
+            result.ShouldBeSameAs(services);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             services.AddDataFilter();
 
             // Assert
-            services.Count.Should().BeGreaterThan(initialCount);
+            services.Count.ShouldBeGreaterThan(initialCount);
         }
     }
 }

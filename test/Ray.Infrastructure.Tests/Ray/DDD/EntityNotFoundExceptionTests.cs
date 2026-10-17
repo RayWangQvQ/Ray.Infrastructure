@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Ray.DDD;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.Ray.DDD
@@ -16,8 +16,8 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var exception = new EntityNotFoundException(errorMessage);
 
             // Assert
-            exception.Message.Should().Be(errorMessage);
-            exception.Should().BeAssignableTo<Exception>();
+            exception.Message.ShouldBe(errorMessage);
+            exception.ShouldBeAssignableTo<Exception>();
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
         {
             // Act & Assert
             var act = () => new EntityNotFoundException(null);
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var exception = new EntityNotFoundException(emptyMessage);
 
             // Assert
-            exception.Message.Should().Be(emptyMessage);
+            exception.Message.ShouldBe(emptyMessage);
         }
 
         [Theory]
@@ -51,7 +51,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var exception = new EntityNotFoundException(message);
 
             // Assert
-            exception.Message.Should().Be(message);
+            exception.Message.ShouldBe(message);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var exception = new EntityNotFoundException("Test message");
 
             // Assert
-            exception.Should().BeAssignableTo<Exception>();
+            exception.ShouldBeAssignableTo<Exception>();
         }
     }
 }
