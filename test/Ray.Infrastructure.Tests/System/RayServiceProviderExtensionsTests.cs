@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -16,7 +16,7 @@ namespace Ray.Infrastructure.Tests.System
 
             // Act & Assert
             var act = () => serviceProvider.GetEngine();
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace Ray.Infrastructure.Tests.System
 
             // Act & Assert
             var act = () => serviceProvider.GetRootScope();
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Ray.Infrastructure.Tests.System
 
             // Act & Assert
             var act = () => serviceProvider!.GetEngine();
-            act.Should().Throw<NullReferenceException>();
+            act.ShouldThrow<NullReferenceException>();
         }
 
         [Fact]
@@ -55,8 +55,8 @@ namespace Ray.Infrastructure.Tests.System
             var act1 = () => serviceProvider.GetEngine();
             var act2 = () => serviceProvider.GetRootScope();
 
-            act1.Should().NotThrow();
-            act2.Should().NotThrow();
+            act1.ShouldNotThrow();
+            act2.ShouldNotThrow();
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Ray.Infrastructure.Tests.System
             // Act & Assert
             using var scope = serviceProvider.CreateScope();
             var act = () => scope.ServiceProvider.GetEngine();
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
     }
 }

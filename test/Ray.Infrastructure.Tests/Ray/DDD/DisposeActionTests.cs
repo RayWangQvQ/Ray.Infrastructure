@@ -1,5 +1,5 @@
-using FluentAssertions;
 using Ray.DDD;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.Ray.DDD
@@ -17,8 +17,8 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             var disposeAction = new DisposeAction(testAction);
 
             // Assert
-            disposeAction.Should().NotBeNull();
-            actionExecuted.Should().BeFalse(); // Action should not be executed yet
+            disposeAction.ShouldNotBeNull();
+            actionExecuted.ShouldBeFalse(); // Action should not be executed yet
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             disposeAction.Dispose();
 
             // Assert
-            actionExecuted.Should().BeTrue();
+            actionExecuted.ShouldBeTrue();
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             disposeAction.Dispose();
 
             // Assert
-            executionCount.Should().Be(3);
+            executionCount.ShouldBe(3);
         }
 
         [Fact]
@@ -63,11 +63,11 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
             // Act
             using (var disposeAction = new DisposeAction(testAction))
             {
-                actionExecuted.Should().BeFalse(); // Not executed yet
+                actionExecuted.ShouldBeFalse(); // Not executed yet
             } // Dispose should be called here
 
             // Assert
-            actionExecuted.Should().BeTrue();
+            actionExecuted.ShouldBeTrue();
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
         {
             // Act & Assert
             var act = () => new DisposeAction(null);
-            act.Should().NotThrow();
+            act.ShouldNotThrow();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Ray.Infrastructure.Tests.Ray.DDD
 
             // Act & Assert
             var act = () => disposeAction.Dispose();
-            act.Should().Throw<NullReferenceException>();
+            act.ShouldThrow<NullReferenceException>();
         }
     }
 }

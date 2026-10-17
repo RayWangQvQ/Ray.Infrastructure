@@ -1,5 +1,5 @@
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -21,10 +21,10 @@ namespace Ray.Infrastructure.Tests.System
             var flags = RayObjectExtensions.FlagsOfAll;
 
             // Assert
-            flags.Should().HaveFlag(BindingFlags.NonPublic);
-            flags.Should().HaveFlag(BindingFlags.Public);
-            flags.Should().HaveFlag(BindingFlags.Static);
-            flags.Should().HaveFlag(BindingFlags.Instance);
+            flags.HasFlag(BindingFlags.NonPublic).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Public).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Static).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Instance).ShouldBeTrue();
         }
 
         [Fact]
@@ -34,11 +34,11 @@ namespace Ray.Infrastructure.Tests.System
             var flags = RayObjectExtensions.FlagsOfAllCurrent;
 
             // Assert
-            flags.Should().HaveFlag(BindingFlags.NonPublic);
-            flags.Should().HaveFlag(BindingFlags.Public);
-            flags.Should().HaveFlag(BindingFlags.Static);
-            flags.Should().HaveFlag(BindingFlags.Instance);
-            flags.Should().HaveFlag(BindingFlags.DeclaredOnly);
+            flags.HasFlag(BindingFlags.NonPublic).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Public).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Static).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Instance).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.DeclaredOnly).ShouldBeTrue();
         }
 
         [Fact]
@@ -48,10 +48,10 @@ namespace Ray.Infrastructure.Tests.System
             var flags = RayObjectExtensions.FlagsOfAllPulic;
 
             // Assert
-            flags.Should().HaveFlag(BindingFlags.Public);
-            flags.Should().HaveFlag(BindingFlags.Instance);
-            flags.Should().NotHaveFlag(BindingFlags.NonPublic);
-            flags.Should().NotHaveFlag(BindingFlags.Static);
+            flags.HasFlag(BindingFlags.Public).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Instance).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.NonPublic).ShouldBeFalse();
+            flags.HasFlag(BindingFlags.Static).ShouldBeFalse();
         }
 
         [Fact]
@@ -61,11 +61,11 @@ namespace Ray.Infrastructure.Tests.System
             var flags = RayObjectExtensions.FlagsOfAllPulicCurrent;
 
             // Assert
-            flags.Should().HaveFlag(BindingFlags.Public);
-            flags.Should().HaveFlag(BindingFlags.Instance);
-            flags.Should().HaveFlag(BindingFlags.DeclaredOnly);
-            flags.Should().NotHaveFlag(BindingFlags.NonPublic);
-            flags.Should().NotHaveFlag(BindingFlags.Static);
+            flags.HasFlag(BindingFlags.Public).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.Instance).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.DeclaredOnly).ShouldBeTrue();
+            flags.HasFlag(BindingFlags.NonPublic).ShouldBeFalse();
+            flags.HasFlag(BindingFlags.Static).ShouldBeFalse();
         }
 
         [Fact]
@@ -80,40 +80,36 @@ namespace Ray.Infrastructure.Tests.System
             var publicMembers = type.GetMembers(RayObjectExtensions.FlagsOfAllPulic);
             var currentMembers = type.GetMembers(RayObjectExtensions.FlagsOfAllCurrent);
 
-            allMembers.Length.Should().BeGreaterThan(publicMembers.Length);
-            currentMembers.Should().NotBeEmpty();
+            allMembers.Length.ShouldBeGreaterThan(publicMembers.Length);
+            currentMembers.ShouldNotBeEmpty();
         }
 
         [Fact]
         public void BindingFlags_Properties_ShouldHaveCorrectValues()
         {
             // Assert
-            RayObjectExtensions
-                .FlagsOfAll.Should()
-                .Be(
-                    BindingFlags.NonPublic
-                        | BindingFlags.Public
-                        | BindingFlags.Static
-                        | BindingFlags.Instance
-                );
+            RayObjectExtensions.FlagsOfAll.ShouldBe(
+                BindingFlags.NonPublic
+                    | BindingFlags.Public
+                    | BindingFlags.Static
+                    | BindingFlags.Instance
+            );
 
-            RayObjectExtensions
-                .FlagsOfAllCurrent.Should()
-                .Be(
-                    BindingFlags.NonPublic
-                        | BindingFlags.Public
-                        | BindingFlags.Static
-                        | BindingFlags.Instance
-                        | BindingFlags.DeclaredOnly
-                );
+            RayObjectExtensions.FlagsOfAllCurrent.ShouldBe(
+                BindingFlags.NonPublic
+                    | BindingFlags.Public
+                    | BindingFlags.Static
+                    | BindingFlags.Instance
+                    | BindingFlags.DeclaredOnly
+            );
 
-            RayObjectExtensions
-                .FlagsOfAllPulic.Should()
-                .Be(BindingFlags.Public | BindingFlags.Instance);
+            RayObjectExtensions.FlagsOfAllPulic.ShouldBe(
+                BindingFlags.Public | BindingFlags.Instance
+            );
 
-            RayObjectExtensions
-                .FlagsOfAllPulicCurrent.Should()
-                .Be(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            RayObjectExtensions.FlagsOfAllPulicCurrent.ShouldBe(
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly
+            );
         }
     }
 }

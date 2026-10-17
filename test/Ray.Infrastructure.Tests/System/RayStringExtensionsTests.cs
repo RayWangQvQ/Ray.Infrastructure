@@ -1,5 +1,5 @@
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -17,7 +17,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = json.JsonDeserialize<object>();
 
             // Assert
-            result.Should().NotBeNull();
+            result.ShouldNotBeNull();
             // 验证反序列化成功即可，不测试具体属性值
         }
 
@@ -28,7 +28,8 @@ namespace Ray.Infrastructure.Tests.System
             var invalidJson = "{ invalid json }";
 
             // Act & Assert
-            Assert.Throws<JsonException>(() => invalidJson.JsonDeserialize<object>());
+            var act = () => invalidJson.JsonDeserialize<object>();
+            act.ShouldThrow<JsonException>();
         }
 
         [Fact]
@@ -41,10 +42,10 @@ namespace Ray.Infrastructure.Tests.System
             var result = compactJson.AsFormatJsonStr();
 
             // Assert
-            result.Should().NotBeNull();
-            result.Should().Contain("  \"name\":"); // 检查是否包含缩进
-            result.Should().Contain("\"name\": \"test\"");
-            result.Should().Contain("\"age\": 25");
+            result.ShouldNotBeNull();
+            result.ShouldContain("  \"name\":"); // 检查是否包含缩进
+            result.ShouldContain("\"name\": \"test\"");
+            result.ShouldContain("\"age\": 25");
         }
 
         [Fact]
@@ -56,7 +57,7 @@ namespace Ray.Infrastructure.Tests.System
             // Act & Assert
             // AsFormatJsonStr在遇到无效JSON时会抛出异常，这是预期行为
             var act = () => invalidJson.AsFormatJsonStr();
-            act.Should().Throw<JsonException>();
+            act.ShouldThrow<JsonException>();
         }
 
         [Fact]
@@ -69,7 +70,7 @@ namespace Ray.Infrastructure.Tests.System
             var result = emptyString.AsFormatJsonStr();
 
             // Assert
-            result.Should().Be(emptyString);
+            result.ShouldBe(emptyString);
         }
     }
 }

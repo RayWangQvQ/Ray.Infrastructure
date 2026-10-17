@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System
@@ -30,7 +30,7 @@ namespace Ray.Infrastructure.Tests.System
         {
             // 测试不同类型的字符处理
             // 由于具体的公开方法需要查看完整代码，这里提供测试结构
-            testChar.Should().NotBe('\0');
+            testChar.ShouldNotBe('\0');
         }
 
         [Fact]
