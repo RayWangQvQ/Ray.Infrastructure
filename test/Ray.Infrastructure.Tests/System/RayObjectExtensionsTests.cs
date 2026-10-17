@@ -9,7 +9,6 @@ namespace Ray.Infrastructure.Tests.System
         private class TestClass
         {
             public string PublicProperty { get; set; } = "PublicValue";
-            private string PrivateField = "PrivateValue";
             internal string InternalProperty { get; set; } = "InternalValue";
             protected string ProtectedField = "ProtectedValue";
             public static string StaticProperty { get; set; } = "StaticValue";
