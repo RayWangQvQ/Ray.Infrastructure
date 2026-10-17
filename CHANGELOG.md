@@ -1,4 +1,5 @@
 ## 0.1.0
+- Drop `net6.0` and `net7.0` target frameworks (end of support)
 - Add `net10.0` target framework
 - Remove redundant `System.Runtime.Loader` package reference
 - Run unit tests on both `net10.0` and `net8.0`
