@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Ray.Infrastructure.Extensions.Json;
 
 public class SettingOption
 {
-    public JsonSerializerSettings SerializerSettings { get; set; }
+    public JsonSerializerOptions SerializerSettings { get; set; }
 
     /// <summary>
     /// 忽略或只保留部分属性
@@ -21,18 +23,44 @@ public class SettingOption
     /// 构建
     /// </summary>
     /// <returns></returns>
-    public JsonSerializerSettings BuildSettings()
+    public JsonSerializerOptions BuildSettings()
     {
         if (SerializerSettings == null)
-            SerializerSettings = new JsonSerializerSettings();
+            SerializerSettings = new JsonSerializerOptions();
 
         //忽略/只保留部分属性
         if (FilterProps != null)
-            SerializerSettings.ContractResolver = new FilterPropsContractResolver(FilterProps);
+        {
+            var props = FilterProps.Props;
+            var retain = FilterProps.FilterEnum;
+            SerializerSettings.TypeInfoResolver = new DefaultJsonTypeInfoResolver
+            {
+                Modifiers =
+                {
+                    typeInfo =>
+                    {
+                        if (typeInfo.Kind != JsonTypeInfoKind.Object)
+                            return;
+                        foreach (
+                            var prop in typeInfo
+                                .Properties.Where(p =>
+                                    retain == FilterEnum.Ignore
+                                        ? !props.Contains(p.Name)
+                                        : props.Contains(p.Name)
+                                )
+                                .ToList()
+                        )
+                        {
+                            typeInfo.Properties.Remove(prop);
+                        }
+                    },
+                },
+            };
+        }
 
         //枚举处理
         if (EnumToString)
-            SerializerSettings.Converters.Add(new StringEnumConverter());
+            SerializerSettings.Converters.Add(new JsonStringEnumConverter());
 
         return SerializerSettings;
     }

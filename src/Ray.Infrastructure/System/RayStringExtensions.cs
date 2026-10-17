@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace System;
 
@@ -9,7 +8,7 @@ public static class RayStringExtensions
 
     public static T JsonDeserialize<T>(this string str)
     {
-        return JsonConvert.DeserializeObject<T>(str);
+        return JsonSerializer.Deserialize<T>(str);
     }
 
     /// <summary>json格式化</summary>
@@ -17,21 +16,11 @@ public static class RayStringExtensions
     /// <returns>System.String.</returns>
     public static string AsFormatJsonStr(this string str)
     {
-        var jsonSerializer = new JsonSerializer();
-        var jsonTextReader = new JsonTextReader(new StringReader(str));
-        object obj = jsonSerializer.Deserialize(jsonTextReader);
-        if (obj == null)
+        if (string.IsNullOrWhiteSpace(str))
             return str;
-        var stringWriter = new StringWriter();
-        var jsonTextWriter1 = new JsonTextWriter(stringWriter)
-        {
-            Formatting = Formatting.Indented,
-            Indentation = 4,
-            IndentChar = ' ',
-        };
-        JsonTextWriter jsonTextWriter2 = jsonTextWriter1;
-        jsonSerializer.Serialize(jsonTextWriter2, obj);
-        return stringWriter.ToString();
+
+        using var doc = JsonDocument.Parse(str);
+        return JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
     }
 
     #endregion

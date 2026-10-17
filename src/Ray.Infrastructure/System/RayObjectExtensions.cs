@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Ray.Infrastructure.Extensions.Json;
 
 namespace System;
@@ -193,7 +193,7 @@ public static class RayObjectExtensions
     {
         if (obj == null)
             return null;
-        return JsonConvert.SerializeObject(obj);
+        return JsonSerializer.Serialize(obj);
     }
 
     public static string ToJsonStr(this object obj, Action<SettingOption> option = null)
@@ -202,7 +202,7 @@ public static class RayObjectExtensions
         option?.Invoke(settingOption);
 
         var setting = settingOption.BuildSettings();
-        return JsonConvert.SerializeObject(obj, setting);
+        return JsonSerializer.Serialize(obj, setting);
     }
 
     #endregion
