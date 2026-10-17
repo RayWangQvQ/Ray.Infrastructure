@@ -1,0 +1,6 @@
+# Text files: store LF in the repo and check out LF (overrides local autocrlf).
+* text=auto eol=lf
+
+# Windows batch files must stay CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
