@@ -99,11 +99,11 @@ jobs:
           if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
             echo "::warning::NUGET_API_KEY not set, skipping push"
           else
+            # `dotnet nuget push *.nupkg` auto-pushes the sibling *.snupkg to the
+            # same source. Pushing the snupkg again separately re-triggers nuget.org
+            # symbols validation, which fails with "pdb(s) ... not found" when the
+            # nupkg already exists (--skip-duplicate) or on any re-push.
             dotnet nuget push ./bin/release-nupkgs/*.nupkg \
-              --api-key ${{ secrets.NUGET_API_KEY }} \
-              --source ${{ env.NUGET_SOURCE }} \
-              --skip-duplicate
-            dotnet nuget push ./bin/release-nupkgs/*.snupkg \
               --api-key ${{ secrets.NUGET_API_KEY }} \
               --source ${{ env.NUGET_SOURCE }} \
               --skip-duplicate
