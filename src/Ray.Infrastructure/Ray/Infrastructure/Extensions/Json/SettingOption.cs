@@ -41,16 +41,20 @@ public class SettingOption
                     {
                         if (typeInfo.Kind != JsonTypeInfoKind.Object)
                             return;
-                        foreach (var prop in typeInfo.Properties
-                                     .Where(p => retain == FilterEnum.Ignore
-                                         ? !props.Contains(p.Name)
-                                         : props.Contains(p.Name))
-                                     .ToList())
+                        foreach (
+                            var prop in typeInfo
+                                .Properties.Where(p =>
+                                    retain == FilterEnum.Ignore
+                                        ? !props.Contains(p.Name)
+                                        : props.Contains(p.Name)
+                                )
+                                .ToList()
+                        )
                         {
                             typeInfo.Properties.Remove(prop);
                         }
-                    }
-                }
+                    },
+                },
             };
         }
 

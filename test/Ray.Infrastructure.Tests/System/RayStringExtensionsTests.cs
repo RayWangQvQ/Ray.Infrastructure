@@ -1,5 +1,5 @@
-using FluentAssertions;
 using System.Text.Json;
+using FluentAssertions;
 using Xunit;
 
 namespace Ray.Infrastructure.Tests.System

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace Ray.Infrastructure.QingLong;
 
@@ -32,7 +32,9 @@ public class QingLongHelper
         var authJson = File.ReadAllText(authFile);
 
         using var doc = JsonDocument.Parse(authJson);
-        var token = doc.RootElement.TryGetProperty("token", out var tokenEl) ? tokenEl.GetString() : null;
+        var token = doc.RootElement.TryGetProperty("token", out var tokenEl)
+            ? tokenEl.GetString()
+            : null;
 
         return token;
     }
