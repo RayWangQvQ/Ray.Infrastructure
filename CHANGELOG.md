@@ -1,3 +1,5 @@
+## 0.1.1
+- fix: stop double-pushing symbols package in release workflow (#19)
 ## 0.1.0
 - Drop `net6.0` and `net7.0` target frameworks (end of support)
 - Add `net10.0` target framework
