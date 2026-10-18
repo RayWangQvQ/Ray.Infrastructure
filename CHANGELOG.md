@@ -1,3 +1,6 @@
+## 0.1.2
+- fix(deps): remove ImageSharp dependency to resolve NU1902 (#21)
+- docs(changelog): 0.1.1 (#20)
 ## 0.1.1
 - fix: stop double-pushing symbols package in release workflow (#19)
 ## 0.1.0
