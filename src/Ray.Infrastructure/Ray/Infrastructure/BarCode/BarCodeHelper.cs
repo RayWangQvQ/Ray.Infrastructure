@@ -2,8 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using SkiaSharp;
 using ZXing;
 using ZXing.Common;
@@ -23,7 +21,7 @@ public class BarCodeHelper
     /// <returns></returns>
     public static Result DecodeByBase64Str(string base64Str)
     {
-        var re = DecodeByBase64Str(base64Str, out Image<Rgba32> img);
+        var re = DecodeByBase64Str(base64Str, out SKBitmap img);
         img.Dispose();
         return re;
     }
@@ -50,39 +48,6 @@ public class BarCodeHelper
         Result skiaResult = skiaReader.Decode(skBitmap);
 
         return skiaResult;
-    }
-
-    /// <summary>
-    /// 解析二维码（使用ImageSharp）
-    /// </summary>
-    /// <param name="base64Str"></param>
-    /// <param name="img"></param>
-    /// <returns></returns>
-    public static Result DecodeByBase64Str(string base64Str, out Image<Rgba32> img)
-    {
-        if (base64Str.Contains(";base64,"))
-        {
-            base64Str = base64Str.Split(";base64,").ToList().Last();
-        }
-
-        var bytes = Convert.FromBase64String(base64Str);
-        using var ms = new MemoryStream(bytes);
-        Image image = Image.Load(ms);
-        img = image.CloneAs<Rgba32>();
-
-        var reader = new ZXing.ImageSharp.BarcodeReader<Rgba32>
-        {
-            Options = new DecodingOptions
-            {
-                //PossibleFormats = new[] { BarcodeFormat.QR_CODE },
-                TryHarder = true,
-                //PureBarcode = false
-            },
-        };
-
-        Result result = reader.Decode(img);
-
-        return result;
     }
 
     #endregion
@@ -116,37 +81,6 @@ public class BarCodeHelper
         return bitmap;
     }
 
-    /// <summary>
-    /// 生成二维码（使用ImageSharp）
-    /// </summary>
-    /// <param name="text"></param>
-    /// <param name="barcodeFormat"></param>
-    /// <param name="optionsAction"></param>
-    /// <returns></returns>
-    public static Image<Rgba32> EncodeByImageSharp(
-        string text,
-        BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE,
-        Action<ZXing.Common.EncodingOptions> optionsAction = null
-    )
-    {
-        var options = new ZXing.Common.EncodingOptions
-        {
-            Width = 300,
-            Height = 300,
-            Margin = 1,
-        };
-        optionsAction?.Invoke(options);
-
-        var writer = new ZXing.ImageSharp.BarcodeWriter<Rgba32>
-        {
-            Format = barcodeFormat,
-            Options = options,
-        };
-
-        Image<Rgba32> image = writer.WriteAsImageSharp<Rgba32>(text);
-        return image;
-    }
-
     #endregion
 
     #region 打印二维码
@@ -177,31 +111,6 @@ public class BarCodeHelper
         return points;
     }
 
-    public static bool[,] AdaptToPoints(Image<Rgba32> image)
-    {
-        const int threshold = 180;
-        bool[,] points = new bool[image.Width, image.Height];
-
-        for (int y = 0; y < image.Height; y++)
-        {
-            for (int x = 0; x < image.Width; x++)
-            {
-                var color = image[x, y];
-
-                if (color.B <= threshold)
-                {
-                    points[x, y] = true;
-                }
-                else
-                {
-                    points[x, y] = false;
-                }
-            }
-        }
-
-        return points;
-    }
-
     public static void PrintQrCode(
         SKBitmap skBitmap,
         char pointChar = '\u2588', //默认"█"，全色方块（与底色相反）
@@ -211,18 +120,6 @@ public class BarCodeHelper
     )
     {
         var points = AdaptToPoints(skBitmap);
-        PrintQrCode(points, pointChar, emptyChar, reverseColor, onRowPrintProcess);
-    }
-
-    public static void PrintQrCode(
-        Image<Rgba32> image,
-        char pointChar = '\u2588', //默认"█"，全色方块（与底色相反）
-        char emptyChar = ' ', //
-        bool reverseColor = false, //反转颜色
-        Action<string> onRowPrintProcess = null
-    )
-    {
-        var points = AdaptToPoints(image);
         PrintQrCode(points, pointChar, emptyChar, reverseColor, onRowPrintProcess);
     }
 
@@ -269,15 +166,6 @@ public class BarCodeHelper
     public static void PrintSmallQrCode(SKBitmap skBitmap, Action<string> onRowPrintProcess = null)
     {
         var points = AdaptToPoints(skBitmap);
-        PrintSmallQrCode(points, onRowPrintProcess);
-    }
-
-    public static void PrintSmallQrCode(
-        Image<Rgba32> image,
-        Action<string> onRowPrintProcess = null
-    )
-    {
-        var points = AdaptToPoints(image);
         PrintSmallQrCode(points, onRowPrintProcess);
     }
 

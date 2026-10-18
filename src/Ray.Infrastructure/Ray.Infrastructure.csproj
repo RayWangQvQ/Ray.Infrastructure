@@ -26,7 +26,6 @@
 		<PackageReference Include="Refit.HttpClientFactory" Version="15.2.0" />
 		<PackageReference Include="Rougamo.Fody" Version="5.0.2" />
 		<PackageReference Include="Mapster" Version="10.0.13" />
-		<PackageReference Include="ZXing.Net.Bindings.ImageSharp.V2" Version="0.16.20" />
 		<PackageReference Include="ZXing.Net.Bindings.SkiaSharp" Version="0.16.24" />
 	</ItemGroup>
 

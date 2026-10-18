@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
 using Ray.Infrastructure.BarCode;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 
 namespace QrCodeTests
 {
@@ -13,23 +10,14 @@ namespace QrCodeTests
         {
             var text = "Hello World";
 
-            //var bitmap = BarCodeHelper.Encode(text);
-
-            //BarCodeHelper.PrintQrCode(bitmap, reverseColor: true);
-            //Console.WriteLine(string.Concat(Enumerable.Repeat(Environment.NewLine, 5)));
-
-            //BarCodeHelper.PrintQrCode(bitmap);
-            //Console.WriteLine(string.Concat(Enumerable.Repeat(Environment.NewLine, 5)));
-
-            //BarCodeHelper.PrintSmallQrCode(bitmap);
-
-
-            Image<Rgba32>? bitmap = BarCodeHelper.EncodeByImageSharp(text);
-            var base64Str = bitmap.ToBase64String(PngFormat.Instance);
+            SKBitmap? bitmap = BarCodeHelper.EncodeSkiaSharp(text);
+            using var image = SKImage.FromBitmap(bitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            var base64Str = Convert.ToBase64String(data.ToArray());
 
             var result = BarCodeHelper.DecodeByBase64Str(base64Str);
 
-            var miniImage = BarCodeHelper.EncodeByImageSharp(
+            var miniImage = BarCodeHelper.EncodeSkiaSharp(
                 text,
                 optionsAction: op =>
                 {
@@ -38,7 +26,7 @@ namespace QrCodeTests
                 }
             );
             BarCodeHelper.PrintQrCode(miniImage, reverseColor: true);
-            Console.WriteLine(string.Concat(Enumerable.Repeat(Environment.NewLine, 5)));
+            Console.WriteLine(string.Concat(System.Linq.Enumerable.Repeat(Environment.NewLine, 5)));
         }
     }
 }
